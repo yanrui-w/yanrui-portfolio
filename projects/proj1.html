@@ -6,7 +6,7 @@
     <title>Project 1 Details</title>
     <link rel="stylesheet" href="../style.css"> <!-- reuse homepage CSS -->
 </head>
-<body>
+<body class="project-page">
 
 <!-- Navigation Bar -->
 <nav>
@@ -19,14 +19,168 @@
     </ul>
 </nav>
 
-<!-- Project Content -->
+<!-- Content -->
+<div class="content-area">
 <div class="container">
-    <h1>Project 1 - Data Analysis</h1>
-    <p>Details about Project 1...</p>
+    <h1 class="project-title">Whale Behavior Analysis in Cryptocurrency Markets</h1>
+    <p class="project-subtitle"><em>Unveiling Whale Behavior by Clustering, Anomaly Detection, and Price Prediction in Crypto Markets</em></p>
 
-    <!-- Back to Project Lists Button -->
-    <a href="../projects/" class="btn">Back to Project Lists</a>
+    <div class="project-section" id="overview">
+        <h2>📌 Project Overview</h2>
+        <p>The cryptocurrency market is highly volatile, influenced by whales (large-scale holders) who execute high-value transactions. Their movements can significantly impact prices, causing rapid fluctuations.<br>This project <span class="highlight-text-1">examined whale behavior</span>, <span class="highlight-text-1">detected anomalous transactions</span>, and <span class="highlight-text-1">builded predictive models</span> to assess their effect on Ethereum (ETH) prices.</p>
+    </div>
+
+    <div class="project-section" id="objectives">
+        <h2>🎯 Objectives</h2>
+        <ul>
+            <li><span class="highlight-text-1">Behavioral Analysis</span>: Classify whale behavior patterns using clustering algorithms and network graph analysis.</li>
+            <li><span class="highlight-text-1">Anomaly Detection</span>: Detect anomalies and identify suspicious transactions using outlier detection techniques.</li>
+            <li><span class="highlight-text-1">Impact Assessment</span>: Analyze the impact of whale trades on Ethereum prices using statistical modeling and predictive analytics.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="workflow">
+        <h2>🧰 Workflow & Methodology</h2>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Workflow</th>
+                    <th>Task</th>
+                    <th>Method/Algorithm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">Data Preparation</td>
+                    <td>Extract data</td>
+                    <td>Define "Whale" and API requests for extracting qualified data</td>
+                </tr>
+                <tr>
+                    <td>Data cleaning</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Behavioral Analysis</td>
+                    <td>Clustering Analysis</td>
+                    <td>DBSCAN, Hierarchical Clustering for whale classification</td>
+                </tr>
+                <tr>
+                    <td>Network Graphs</td>
+                    <td>Graph visualization to track whale movements</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Anomaly Detection</td>
+                    <td>Create detection metrics</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Build model</td>
+                    <td>Decision Tree-based models for high-risk transactions</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Impact Assessment</td>
+                    <td>Feature engineering</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Build model</td>
+                    <td>XGBoost Regression for ETH price forecasting</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="project-section" id="data">
+        <h2>📊 Data Preparation</h2>
+        <h3>Definition of "Whale"</h3>
+        <p><span class="highlight-text-2">"The term “whale” is used to describe an individual or organization that holds a large amount of a particular cryptocurrency. There is no exact cutoff threshold for this definition, but some say a Bitcoin whale should hold at least 1,000 BTC. A whale may also be defined as a person that has enough coins or tokens to cause a significant impact on the market prices, either by buying or selling large amounts."——Binance Academy</p></span>
+        <p>Definition in this project:</p>
+        <ul>
+            <li><b>Threshold:</b> Individuals or organizations with transactions exceeding 10,000 ETH (~$500K USD).</li>
+            <li><b>Period:</b> 1 May 2024 - 31 October 2024</li>
+            <li><b>Source:</b>
+                <ul>
+                    <li><b>Dune Analytics</b> - Extracted addresses from the top 250 largest qualifying transactions.</li>
+                    <li><b>Etherscan</b> - Retrieved detailed transaction data for these addresses.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Use of dataset</h3>
+
+        <h3>Use of dataset</h3>
+        <p>Use of dataset:</p>
+        <ul>
+            <li><b>Threshold:</b>Individuals or organizations with transactions exceeding 10,000 ETH (~$500K USD).</li>
+            <li><b>Period:</b>1 May 2024 - 31 October 2024</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="behavioral">
+        <h2>🐋 Behavioral Analysis</h2>
+        <p>We collected transaction data from **Dune Analytics & Etherscan** (May–Oct 2024) focusing on transfers over **10,000 ETH**. Key steps included:</p>
+        <ul>
+            <li><b>Data Preprocessing:</b> Standardizing transaction values, gas fees, and wallet activity.</li>
+            <li><b>Clustering:</b> Using **DBSCAN + Hierarchical Clustering** to classify whales.</li>
+            <li><b>Anomaly Detection:</b> Using **Decision Trees** to flag high-risk wallets.</li>
+            <li><b>Price Prediction:</b> Using **XGBoost Regression** to forecast Ethereum price shifts.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="anomaly">
+        <h2>⚠️ Anomaly Detection</h2>
+        <p>We collected transaction data from **Dune Analytics & Etherscan** (May–Oct 2024) focusing on transfers over **10,000 ETH**. Key steps included:</p>
+        <ul>
+            <li><b>Data Preprocessing:</b> Standardizing transaction values, gas fees, and wallet activity.</li>
+            <li><b>Clustering:</b> Using **DBSCAN + Hierarchical Clustering** to classify whales.</li>
+            <li><b>Anomaly Detection:</b> Using **Decision Trees** to flag high-risk wallets.</li>
+            <li><b>Price Prediction:</b> Using **XGBoost Regression** to forecast Ethereum price shifts.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="impact">
+        <h2>📈 Impact Assessment</h2>
+        <p>We collected transaction data from **Dune Analytics & Etherscan** (May–Oct 2024) focusing on transfers over **10,000 ETH**. Key steps included:</p>
+        <ul>
+            <li><b>Data Preprocessing:</b> Standardizing transaction values, gas fees, and wallet activity.</li>
+            <li><b>Clustering:</b> Using **DBSCAN + Hierarchical Clustering** to classify whales.</li>
+            <li><b>Anomaly Detection:</b> Using **Decision Trees** to flag high-risk wallets.</li>
+            <li><b>Price Prediction:</b> Using **XGBoost Regression** to forecast Ethereum price shifts.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="findings">
+        <h2>🔍 Findings & Conclusions</h2>
+        <p>We collected transaction data from **Dune Analytics & Etherscan** (May–Oct 2024) focusing on transfers over **10,000 ETH**. Key steps included:</p>
+        <ul>
+            <li><b>Data Preprocessing:</b> Standardizing transaction values, gas fees, and wallet activity.</li>
+            <li><b>Clustering:</b> Using **DBSCAN + Hierarchical Clustering** to classify whales.</li>
+            <li><b>Anomaly Detection:</b> Using **Decision Trees** to flag high-risk wallets.</li>
+            <li><b>Price Prediction:</b> Using **XGBoost Regression** to forecast Ethereum price shifts.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="challenges">
+        <h2>🚀 Challenges & Future Work</h2>
+        <ul>
+            <li><b>Blockchain Anonymity:</b> Hard to link multiple addresses to the same entity.</li>
+            <li><b>Limited Dataset:</b> Ethereum-focused; cross-chain analysis needed.</li>
+            <li><b>External Factors:</b> Excluding market sentiment & regulations may affect accuracy.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="resources">
+        <h2>🔗 Resources & Code</h2>
+        <p>📂 <a href="https://github.com/yourusername/whale-analysis">View code on GitHub</a></p>
+        <p>📄 <a href="../docs/whale_behavior_report.pdf">Download Full Report (PDF)</a></p>
+        <iframe src="../visuals/whale_network_graph.html" width="800" height="500"></iframe>
+    </div>
 </div>
+</div>
+
+
+<!-- Back to Project Lists Button -->
+<a href="../projects/" class="btn">Back to Project Lists</a>
 
 </body>
 </html>
