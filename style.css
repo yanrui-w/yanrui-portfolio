@@ -243,7 +243,7 @@ nav ul li a:hover::after{
 .project-subtitle {
     padding: 5px;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     font-style: italic;
     color: #ccc; /* Light gray for subtle effect */
     margin: 10px auto; /* Centers horizontally */
@@ -262,7 +262,7 @@ nav ul li a:hover::after{
     line-height: 1.8;
 }
 .project-section ul {
-    padding: 10px;
+    padding: 5px;
     padding-left: 0;  /* Removes default left padding */
     margin-left: 0;   /* Ensures alignment with h2 */
     list-style-position: inside; /* Ensures bullets align well */
@@ -280,11 +280,11 @@ nav ul li a:hover::after{
     padding: 2px 5px; 
     border-radius: 5px; /* Softens edges */
 }
-.highlight-text-2{
+/* .highlight-text-2{
     color: #ababab;
     font-size: 16px;
     font-style: italic;
-}
+} */
 
 .styled-table {
     width: 100%;
@@ -309,6 +309,18 @@ nav ul li a:hover::after{
 }
 .styled-table tr:hover {
     background-color: #333; /* Subtle hover effect */
+}
+
+.image-container {
+    display: flex;
+    justify-content: center; /* Center the images */
+    gap: 10px; /* Add space between images */
+}
+
+.image-container img {
+    margin-bottom: 20px;
+    max-width: 45%; /* Adjust width as needed */
+    height: auto;
 }
 
 /* ----------------contact---------------- */
