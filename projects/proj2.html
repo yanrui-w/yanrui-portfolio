@@ -23,108 +23,152 @@
 <div class="content-area">
 <div class="container">
     <h1 class="project-title">Advanced SQL Analysis on Customers and Products</h1>
-    <p class="project-subtitle"><em>Skillset: Change-Over-Time Trends, Cumulative Analysis, Performance Analysis, Part-to-Whole Proportional, Data Segmentation and Reporting.</em></p>
+    <p class="project-subtitle"><em>Topics: Change-Over-Time Trends, Cumulative Analysis, Performance Analysis, Part-to-Whole Proportional, Data Segmentation and Reporting.</em></p>
 
     <div class="project-section" id="overview">
         <h2>📌 Project Overview</h2>
-        <p>This is a data analytics virtual project on <a href="https://www.theforage.com/" target="_blank">Forage</a> provided by Quantium. It simulated my role as a retail analytics team member, where I analyzed chips transaction and customer data to <span class="highlight-text-1">evaluate sales performance</span>, <span class="highlight-text-1">identify target customers</span>, and <span class="highlight-text-1">provide commercial recommendations</span>. Additionally, I conducted <span class="highlight-text-1">impact assessments</span> of a new trial based on these insights.</p>
+        <p>This project applies advanced SQL techniques, including complex queries, window functions, CTEs, subqueries, and report generation, to extract insights and address business questions. It focuses on analyzing <span class="highlight-text-1">change-over-time trends</span>, <span class="highlight-text-1">cumulative patterns</span>, <span class="highlight-text-1">performance metrics</span>, <span class="highlight-text-1">part-to-whole proportions</span>, <span class="highlight-text-1">data segmentation</span>, and <span class="highlight-text-1">comprehensive reporting</span>.</p>
     </div>
 
     <div class="project-section" id="objectives">
         <h2>🛢️ Database</h2>
-        <h3>Transaction data:</h3>
         <ul>
-            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
-            <li>Data volume: 250K+ rows</li>
+            <li>gold.dim_products: Stores product details.</li>
+            <li>gold.dim_customers: Stores customer details.</li>
+            <li>gold.fact_sales: Stores sales transactions.</li>
         </ul>
-        <h3>Customer data:</h3>
-        <ul>
-            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
-            <li>Data volume: 70K+ rows</li>
-        </ul>
+        <div class="image-container">
+            <img src="images/proj2-1.png">
+        </div>
     </div>
 
     <div class="project-section" id="workflow">
         <h2>📈 Change-Over-Time Trends</h2>
-        <h3>Transaction data:</h3>
+        <h3>Goals</h3>
         <ul>
-            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
-            <li>Data volume: 250K+ rows</li>
+            <li>Analyze how a measure evolves over time.</li>
+            <li>Help track trends and identify seasonality in your data.</li>
         </ul>
-        <h3>Customer data:</h3>
+        <h3>Tasks</h3>
         <ul>
-            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
-            <li>Data volume: 70K+ rows</li>
+            <li>1. High-level overview of total sales, number of customers, quantity by year.</li>
+            <li>2. Drill down to months.</li>
         </ul>
     </div>
 
     <div class="project-section" id="data">
         <h2>📊 Cumulative Analysis</h2>
-        <h3>Transaction data:</h3>
+        <h3>Goals</h3>
         <ul>
-            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
-            <li>Data volume: 250K+ rows</li>
+            <li>Aggregate the data progressively over time.</li>
+            <li>Help to understand whether our business is growing or declining.</li>
         </ul>
-        <h3>Customer data:</h3>
+        <h3>Tasks</h3>
         <ul>
-            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
-            <li>Data volume: 70K+ rows</li>
+            <li>1. View total sales per month, running total of sales and moving avg of price over time.</li>
         </ul>
     </div>
 
     <div class="project-section" id="behavioral">
         <h2>📋 Performance Analysis</h2>
-        <h3>Transaction data:</h3>
+        <h3>Goals</h3>
         <ul>
-            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
-            <li>Data volume: 250K+ rows</li>
+            <li>Compare the current value to a target value.</li>
+            <li>Help measure success and compare performance.</li>
         </ul>
-        <h3>Customer data:</h3>
+        <h3>Tasks</h3>
         <ul>
-            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
-            <li>Data volume: 70K+ rows</li>
+            <li>1. Analyze the yearly performance of products by comparing each product's sales to both its average sales performance and the previous year's sales.</li>
         </ul>
     </div>
 
     <div class="project-section" id="anomaly">
         <h2>🔵 Part-to-Whole Proportional</h2>
-        <h3>Transaction data:</h3>
+        <h3>Goals</h3>
         <ul>
-            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
-            <li>Data volume: 250K+ rows</li>
+            <li>Analyze how an individual part is performing compared to the overall.</li>
+            <li>Allow us to understand which category has the greatest impact on the business.</li>
         </ul>
-        <h3>Customer data:</h3>
+        <h3>Tasks</h3>
         <ul>
-            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
-            <li>Data volume: 70K+ rows</li>
+            <li>1. Which categories contribute the most to overall sales?</li>
         </ul>
     </div>
 
     <div class="project-section" id="anomaly">
         <h2>🔍 Data Segmentation</h2>
-        <h3>Transaction data:</h3>
+        <h3>Goals</h3>
         <ul>
-            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
-            <li>Data volume: 250K+ rows</li>
+            <li>Group the data based on a specific range.</li>
+            <li>Help understand the correlation b/w two measures.</li>
         </ul>
-        <h3>Customer data:</h3>
+        <h3>Tasks</h3>
         <ul>
-            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
-            <li>Data volume: 70K+ rows</li>
+            <li>1. Segment products into cost ranges and count how many products fall into each segment.</li>
+            <li>2. Group customers into 3 segments based on their spending behavior listed as below, and find the total number of customers by each group.</li>
+            <ul>
+                <li>VIP: at least 12 months of history and spending more than €5,000</li>
+                <li>Regular: at least 12 months of history but spending €5,000 or less</li>
+                <li>New: lifespan less than 12 months</li>
+            </ul>
         </ul>
     </div>
 
     <div class="project-section" id="anomaly">
         <h2>📄 Reporting</h2>
-        <h3>Transaction data:</h3>
+        <h3>Goals</h3>
         <ul>
-            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
-            <li>Data volume: 250K+ rows</li>
+            <li>Collect different types of explorations and analysis.</li>
+            <li>Help stakeholders to have insights into one object and make great decision-making.</li>
         </ul>
-        <h3>Customer data:</h3>
+        <h3>Tasks</h3>
         <ul>
-            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
-            <li>Data volume: 70K+ rows</li>
+            <li>1. Customer Report</li>
+            <ul>
+                <li>Purpose: This report consolidates key customer metrics and behaviors.</li>
+                <li>Highlights:</li>
+                <ul>
+                    <li>Gathers essential fields such as names, ages, and transaction details.</li>
+                    <li>Segments customers into categories (VIP, Regular, New) and age groups.</li>
+                    <li>Aggregates customer-level metrics:</li>
+                    <ul>
+                        <li>total orders</li>
+                        <li>total sales</li>
+                        <li>total quantity purchased</li>
+                        <li>total products</li>
+                        <li>lifespan (in months)</li>
+                    </ul>
+                    <li>Calculates valuable KPIs:</li>
+                    <ul>
+                        <li>recency (months since last order)</li>
+                        <li>average order value (AOV)</li>
+                        <li>average monthly spend</li>
+                    </ul>
+                </ul>
+            </ul>
+            <li>2. Product Report</li>
+            <ul>
+                <li>Purpose: This report consolidates key product metrics and behaviors.</li>
+                <li>Highlights:</li>
+                <ul>
+                    <li>Gathers essential fields such as product name, category, subcategory, and cost.</li>
+                    <li>Segments products by revenue to identify High-Performers, Mid-Range, or Low-Performers.</li>
+                    <li>Aggregates product-level metrics:</li>
+                    <ul>
+                        <li>total orders</li>
+                        <li>total sales</li>
+                        <li>total quantity sold</li>
+                        <li>total customers (unique)</li>
+                        <li>lifespan (in months)</li>
+                    </ul>
+                    <li>Calculates valuable KPIs:</li>
+                    <ul>
+                        <li>recency (months since last sale)</li>
+                        <li>average order revenue (AOR)</li>
+                        <li>average monthly revenue</li>
+                    </ul>
+                </ul>
+            </ul>
         </ul>
     </div>
 
