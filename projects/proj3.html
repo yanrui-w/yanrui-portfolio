@@ -19,14 +19,129 @@
     </ul>
 </nav>
 
-<!-- Project Content -->
+<!-- Content -->
+<div class="content-area">
 <div class="container">
-    <h1>Project 3 - Data Analysis</h1>
-    <p>Details about Project 3...</p>
+    <h1 class="project-title">Sales & Customer Performance Dashboard</h1>
+    <p class="project-subtitle"><em>Topics: Tableau Interactive Dashboard, Ban with Sparkline, Bar in Bar Chart, Bar Chart, Tables.</em></p>
 
-    <!-- Back to Project Lists Button -->
-    <a href="../projects/" class="btn">Back to Project Lists</a>
+    <div class="project-section" id="overview">
+        <h2>📌 Project Overview</h2>
+        <p>This project demonstrates the development of an end-to-end business intelligence dashboard using Tableau Desktop. The goal was to empower business stakeholders—particularly sales and marketing teams—with a dynamic tool to monitor sales trends, evaluate customer growth, and compare year-over-year performance.</p>
+        <p>The dashboard integrates <span class="highlight-text-1">core KPIs</span> such as Total Sales, Profit, Quantity, Orders Counts, Customer Counts and Sales Per Customer, and includes <span class="highlight-text-1">time-based comparisons</span>, <span class="highlight-text-1">region-level breakdowns</span>, and <span class="highlight-text-1">customer segmentation views</span>.</p>
+    </div>
+
+    <div class="project-section" id="objectives">
+        <h2>🛢️ Database</h2>
+        <p>The underlying dataset simulates a retail sales environment, containing transactional-level records over multiple years. Fields include:</p>
+        <ul>
+            <li>Orders.csv: Contains detailed transactional data such as order date, sales amount, discount, and profit margin.</li>
+            <li>Products.csv: Provides product metadata including product names, categories, and sub-categories.</li>
+            <li>Customers.csv: Holds customer demographic and behavioral information, including customer ID, name, and segment.</li>
+            <li>Location.csv: Holds customer geographic locations, including region, state and city.</li>
+        </ul>
+        <div class="image-container">
+            <img src="images/proj3-1.png">
+        </div>
+    </div>
+
+    <div class="project-section" id="workflow">
+        <h2>🧠 Business Requirement</h2>
+        <p>This user story outlines the specifications for building two dashboards using Tableau to help stakeholders, including sales managers and executives, to analyze sales performance and customers.</p>
+        <h3>Sales Dashboard | Requirements</h3>
+        <p><b>Dashboard Purpose</b></p>
+        <ul>
+            <li>The purpose of the sales dashboard is to present an overview of the sales metrics and trends in order to analyze year-over-year sales performance and understand sales trends.</li>
+        </ul>
+        
+        <p><b>KPI Overview</b></p>
+        <ul>
+            <li>Display a summary of total sales, profits, and quantity for the current year and the previous year.</li>
+        </ul>
+        
+        <p><b>Sales Trends</b></p>
+        <ul>
+            <li>Present the data for each KPI on a monthly basis for both the current year and the previous year.</li>
+            <li>Identify months with the highest and lowest sales and make them easy to recognize.</li>
+        </ul>
+        
+        <p><b>Product Subcategory Comparison</b></p>
+        <ul>
+            <li>Compare sales performance by different product subcategories for the current year and the previous year.</li>
+            <li>Include a comparison of sales with profit.</li>
+        </ul>
+
+        <p><b>Weekly Trends for Sales & Profit</b></p>
+        <ul>
+            <li>Present weekly sales and profit data for the current year.</li>
+            <li>Display the average weekly values.</li>
+            <li>Highlight weeks that are above and below the average to draw attention to sales and profit performance.</li>
+        </ul>
+
+        <h3>Customer Dashboard | Requirements</h3>
+        <p><b>Dashboard Purpose</b></p>
+        <ul>
+            <li>The customer dashboard aims to provide an overview of customer data, trends and behaviors. It will help marketing teams and management to understand customer segments and improve customer satisfaction.</li>
+        </ul>
+        
+        <p><b>KPI Overview</b></p>
+        <ul>
+            <li>Display a summary of total number of customers , total sales per customer and total number of orders for the current year and the previous year.</li>
+        </ul>
+        
+        <p><b>Customer Trends</b></p>
+        <ul>
+            <li>Present the data for each KPI on a monthly basis for both the current year and the previous year.</li>
+            <li>Identify months with highest and lowest sales and make them easy to recognize.</li>
+        </ul>
+        
+        <p><b>Customer Distribution by Number of Orders</b></p>
+        <ul>
+            <li>Represent the distribution of customers based on the number of orders they have placed to provide insights into customer behavior, loyalty and engagement.</li>
+        </ul>
+
+        <p><b>Top 10 Customers By Profit</b></p>
+        <ul>
+            <li>Present the top 10 customers who have generated the highest profits for the company.</li>
+            <li>Show additional information like rank, number of orders, current sales, current profit and the last order date.</li>
+        </ul>
+
+        <h3>Design & Interactivity Requirements</h3>
+        <p><b>Dashboard Dynamic</b></p>
+        <ul>
+            <li>The Dashboard should allow users to check historical data by offering them the flexibility to select any desired year.</li>
+            <li>Provide users with the ability to navigate between the dashboards easily.</li>
+            <li>Make the charts and graphs interactive, enabling users to filter data using the charts.</li>
+        </ul>
+
+        <p><b>Data Filters</b></p>
+        <ul>
+            <li>Allow users to filter data by product information like category and subcategory and by location information like region, state and city.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="data">
+        <h2>📊 Dashboards</h2>
+        <h3>Sales Dashboard</h3>
+        <div class="image-container">
+            <img src="images/proj3-2.png">
+        </div>
+        <h3>Customer Dashboard</h3>
+        <div class="image-container">
+            <img src="images/proj3-3.png">
+        </div>
+    </div>
+
+    <div class="project-section" id="resources">
+        <h2>🔗 Code Link</h2>
+        <p>📂 <a href="https://github.com/yanrui-w/Project-Files/blob/4c5553c8740ac01cbf400ad9fab439a634422589/SQL_Advanced_Data_Analysis_Project/scripts/SQL%20Advanced%20Data%20Analytics_analysis.sql">View code on GitHub</a></p>
+    </div>
 </div>
+</div>
+
+
+<!-- Back to Project Lists Button -->
+<a href="../projects/" class="btn">Back to Project Lists</a>
 
 </body>
 </html>
