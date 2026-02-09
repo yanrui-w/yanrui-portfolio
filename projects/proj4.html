@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 4 Details</title>
+    <title>Project 1 Details</title>
     <link rel="stylesheet" href="../style.css"> <!-- reuse homepage CSS -->
 </head>
-<body>
+<body class="project-page">
 
 <!-- Navigation Bar -->
 <nav>
@@ -19,14 +19,233 @@
     </ul>
 </nav>
 
-<!-- Project Content -->
+<!-- Content -->
+<div class="content-area">
 <div class="container">
-    <h1>Project 4 - Data Analysis</h1>
-    <p>Details about Project 4...</p>
+    <h1 class="project-title">Retail Strategy and Analytics on Potato Chips</h1>
+    <p class="project-subtitle"><em>Topics: Customer Behavior Analysis, Sales Performance Evaluation, Statistical Testing, Benchmark Store Selection, Uplift Testing.</em></p>
 
-    <!-- Back to Project Lists Button -->
-    <a href="../projects/" class="btn">Back to Project Lists</a>
+    <div class="project-section" id="overview">
+        <h2>📌 Project Overview</h2>
+        <p>This is a data analytics virtual project on <a href="https://www.theforage.com/" target="_blank">Forage</a> provided by Quantium. It simulated my role as a retail analytics team member, where I analyzed chips transaction and customer data to <span class="highlight-text-1">evaluate sales performance</span>, <span class="highlight-text-1">identify target customers</span>, and <span class="highlight-text-1">provide commercial recommendations</span>. Additionally, I conducted <span class="highlight-text-1">impact assessments</span> of a new trial based on these insights.</p>
+    </div>
+
+    <div class="project-section" id="objectives">
+        <h2>📁 Dataset</h2>
+        <h3>Transaction data:</h3>
+        <ul>
+            <li>Attributes: Transactions from Jul 2018 to Jun 2019, detailing store/customer/transaction/product ID, product name, quantity and total sales.</li>
+            <li>Data volume: 250K+ rows</li>
+        </ul>
+        <h3>Customer data:</h3>
+        <ul>
+            <li>Attributes: Customer ID, customer segmentation, and household information.</li>
+            <li>Data volume: 70K+ rows</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="workflow">
+        <h2>🧰 Workflow & Methodology</h2>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Workflow</th>
+                    <th>Tasks</th>
+                    <th>Methodology</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">Data Preparation</td>
+                    <td>Check data types, outliers, missing values, data consistency</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Extract more features for further analysis, merge datasets</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Sales Performance Evaluation</td>
+                    <td>Define evaluation metrics</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Exam each metrics element across customer segments</td>
+                    <td>Visualization, Statistical testing</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Commercial Recommendations</td>
+                    <td>Identify target customers</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Analyze target customers' preference and provide insights</td>
+                    <td>Affinity analysis</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Recommendations Impact Assessment</td>
+                    <td>Find control group</td>
+                    <td>Similarity analysis</td>
+                </tr>
+                <tr>
+                    <td>Compare performance of control and test group</td>
+                    <td>Statistical testing, Uplift testing</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="project-section" id="data">
+        <h2>📊 Sales Performance Evaluation</h2>
+        <h3>Evaluation Metrics</h3>
+        <p>Sales  =  Number of Customers per Segment  ×  Pack Units Bought by per Customer  ×  Unit Price per Segment</p>
+
+        <h3>Observations on Sales Overview</h3>
+        <p>1. The number of chips purchases has stayed mostly the same over the past 52 weeks, with a noticeable increase in the week before Christmas, and no purchases during the Christmas holiday due to store closures.</p>
+        <div class="image-container">
+            <img src="images/proj1-1.png">
+            <img src="images/proj1-2.png">
+        </div>
+        <p>2. Sales are coming mainly from 'Budget-Older Families', 'Mainstream-Young Singles/Couples', and 'Mainstream-Retirees'</p>
+        <div class="image-container">
+            <img src="images/proj1-3.png">
+        </div>
+
+        <h3>Observations on Number of Customers</h3>
+        <p>1. There are more 'Mainstream-Young Singles/Couples' and 'Mainstream-Retirees' who buy chips. This contributes to there being more sales to these customer segments but this is not a major driver for the 'Budget-Older Families' segment.</p>
+        <div class="image-container">
+            <img src="images/proj1-4.png">
+        </div>
+
+        <h3>Observations on Pack Units Bought by per Customer</h3>
+        <p>1. 'Older Families' and 'Young Families' in general buy more chips per customer.</p>
+        <div class="image-container">
+            <img src="images/proj1-5.png">
+        </div>
+
+        <h3>Observations on Unit Price per Segment</h3>
+        <p>1. 'Mainstream Midage/Young Singles and Couples' are more willing to pay more per packet of chips compared to their budget and premium counterparts.</p>
+        <div class="image-container">
+            <img src="images/proj1-6.png">
+        </div>
+        <ul>
+            <li>This may be due to premium shoppers being more likely to buy healthy snacks and when they buy chips, this is mainly for entertainment purposes rather than their own consumption. This is also supported by there being fewer 'Premium Midage and Young Singles and Couples' buying chips compared to their mainstream counterparts.</li>
+            <li>The difference in average unit price may appear small, but it could still be statistically significant.</li>
+            <li>A one-tailed independent t-test results in a p-value < 2.2e-16, indicating that the unit price for 'Mainstream, Young, and Mid-age Singles and Couples' is significantly higher than that of 'Budget' or 'Premium' segments within the same demographic groups. The p-value falls within the rejection region, confirming a statistically significant difference.</li>
+        </ul>
+    </div>
+
+    <div class="project-section" id="behavioral">
+        <h2>💡 Commercial Recommendations</h2>
+        <h3>Target Customers</h3>
+        <p>Mainstream, Young Singles/Couples</p>
+        <h3>Customer Preference: Brand of chips</h3>
+        <p>Brand affinity analysis shows:</p>
+        <ul>
+            <li>'Mainstream Young Singles/Couples' are 23% (line no.5) more likely to purchase Tyrrells chips compared to the rest of the population.</li>
+            <li>'Mainstream Young Singles/Couples' are 56% (line no.0) less likely to purchase Burger Rings compared to the rest of the population.</li>
+        </ul>
+        <div class="image-container">
+            <img src="images/proj1-7.png">
+        </div>
+
+        <h3>Customer Preference: Pack Size</h3>
+        <p>Pack affinity analysis shows:</p>
+        <ul>
+            <li>'Mainstream Young Singles/Couples' are 27% (line no.17) more likely to purchase a 270g pack of chips com pared to the rest of the population</li>
+            <li>Twisties are the only brand offering 270g packs and so this may instead be reflecting a higher likelihood of purchasing Twisties.</li>
+        </ul>
+        <div class="image-container">
+            <img src="images/proj1-8.png">
+            <img src="images/proj1-9.png">
+        </div>
+
+        <h3>Recommendations</h3>
+        <p>Since Mainstream Young Singles and Couples are 23% more likely to purchase Tyrrells chips and 270g packs (relatively small packs) than the general population, placing these products near areas frequently visited by them can increase visibility and encourage purchases.</p>
+        <p>Based on the recommendations, stores No.77, 86, 88 are selected for the trial.</p>
+    </div>
+
+    <div class="project-section" id="anomaly">
+        <h2>📋 Recommendation Impact Assessment</h2>
+        <h3>Algorithm of selecting Control store</h3>
+        <ul>
+            <li>Business period: Stores that have a full observation period before the trial, providing a stable and reliable dataset for meaningful comparisons.</li>
+            <li>Performance: Stores that have similar performance with trial stores during pre-trial period</li>
+            <ul>
+                <li>Monthly overall sales revenue</li>
+                <li>Monthly number of customers</li>
+                <li>Monthly number of transactions per customer</li>
+                <li>Monthly quantity of chips per transaction</li>
+                <li>Monthly unit price</li>
+            </ul>
+            <li>Similarity:</li>
+            <ul>
+                <li>Use correlation-based similarity to identify stores with similar patterns over time.</li>
+                <li>Use magnitude-based similarity to filter out stores with high absolute deviations (even if they show some correlation).</li>
+            </ul>
+        </ul>
+
+        <h3>Assessment on Trial Store No. 77</h3>
+        <p>1. Control Store: No. 233. They show similar trend and absolute deviation in terms of total sales and number of customers during pre-trial period.</p>
+        <div class="image-container">
+            <img src="images/proj1-10.png">
+            <img src="images/proj1-11.png">
+        </div>
+        <p>2. The recommendation has a measurable impact. The trial store exceeded the expected range (crossed above the 95th percentile), it indicates a positive uplift in sales and number of customers. Significant effect in March and April 2019.</p>
+        <ul>
+            <li>Compare the differences b/w Trial Store and Scaled Control Store during the trial period and the pre-trial period.</li>
+            <li>A one-sample one-side t-test shows the difference is statistically significant.</li>
+            <li>External factors are unlikely to be the reason. Because the control store’s confidence interval accounts for normal sales variations, however the trial store goes outside this range, suggesting that the changes are not due to external factors (e.g., seasonality, economic shifts) but rather due to the trial intervention itself.</li>
+        </ul>
+        <div class="image-container">
+            <img src="images/proj1-12.png">
+            <img src="images/proj1-13.png">
+        </div>
+
+        <h3>Assessment on Trial Store No. 86</h3>
+        <p>1. Control Store: No. 155. They show similar trend and absolute deviation in terms of total sales and number of customers during pre-trial period.</p>
+        <div class="image-container">
+            <img src="images/proj1-14.png">
+            <img src="images/proj1-15.png">
+        </div>
+        <p>2. The recommendation has a measurable impact. The trial store exceeded the expected range (crossed above the 95th percentile), it indicates a positive uplift in sales and number of customers. Significant effect in February and March 2019.</p>
+        <ul>
+            <li>A one-sample one-side t-test shows the difference is statistically significant.</li>
+            <li>External factors are unlikely to be the reason.</li>
+        </ul>
+        <div class="image-container">
+            <img src="images/proj1-16.png">
+            <img src="images/proj1-17.png">
+        </div>
+
+        <h3>Assessment on Trial Store No. 88</h3>
+        <p>1. Control Store: No. 237. They show similar trend and absolute deviation in terms of total sales and number of customers during pre-trial period.</p>
+        <div class="image-container">
+            <img src="images/proj1-18.png">
+            <img src="images/proj1-19.png">
+        </div>
+        <p>2. The recommendation has a measurable impact. The trial store exceeded the expected range (crossed above the 95th percentile), it indicates a positive uplift in sales and number of customers. </p>
+        <ul>
+            <li>A one-sample one-side t-test shows the difference is statistically significant.</li>
+            <li>External factors are unlikely to be the reason.</li>
+        </ul>
+        <div class="image-container">
+            <img src="images/proj1-20.png">
+            <img src="images/proj1-21.png">
+        </div>
+
+    </div>
+
+    <div class="project-section" id="resources">
+        <h2>🔗 Code Link</h2>
+        <p>📂 <a href="https://github.com/yanrui-w/Project-Files/blob/4c5553c8740ac01cbf400ad9fab439a634422589/Quantium_Python_Data_Analytics_Project/Quantium_Data%20Analytics%20Project.ipynb">View code on GitHub</a></p>
+    </div>
 </div>
+</div>
+
+
+<!-- Back to Project Lists Button -->
+<a href="../projects/" class="btn">Back to Project Lists</a>
 
 </body>
 </html>
