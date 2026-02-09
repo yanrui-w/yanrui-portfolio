@@ -1,32 +1,2988 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 5 Details</title>
-    <link rel="stylesheet" href="../style.css"> <!-- reuse homepage CSS -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insurance Finance Processing Layer | Project</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .layout {
+      display: flex;
+      gap: 32px;
+    }
+    .toc {
+      width: 260px;
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+      border-left: 4px solid #eee;
+      padding-left: 16px;
+    }
+    .toc h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    .toc ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .toc li {
+      margin: 6px 0;
+    }
+    .toc a {
+      text-decoration: none;
+      color: #555;
+      font-size: 14px;
+    }
+    .toc a:hover {
+      color: #000;
+    }
+    .content {
+      flex: 1;
+    }
+    section {
+      margin-bottom: 48px;
+    }
+    section h2 {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+    }
+    code, pre {
+      background: #f8f8f8;
+      padding: 8px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Navigation Bar -->
+<!-- Navigation -->
 <nav>
-    <img src="../images/logo_4.png" class="logo">
-    <ul id="sidemenu">
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="../index.html#about">About</a></li>
-        <li><a href="../projects/">Projects</a></li>
-        <li><a href="../index.html#contact">Contact</a></li>
-    </ul>
+  <img src="../images/logo_4.png" class="logo" />
+  <ul id="sidemenu">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../projects/">Projects</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
 </nav>
 
-<!-- Project Content -->
-<div class="container">
-    <h1>Project 1 - Insurance Finance Processing Layer Mini-Design: Policy/Claims/Commission to GL</h1>
-    <p>Details about Project 5...</p>
+<div class="content-area">
+  <div class="container layout">
 
-    <!-- Back to Project Lists Button -->
-    <a href="../projects/" class="btn">Back to Project Lists</a>
+    <!-- TOC -->
+    <aside class="toc">
+      <h3>Contents</h3>
+      <ul>
+        <li><a href="#background">Project Background</a></li>
+        <li><a href="#objectives">Project Objectives</a></li>
+        <li><a href="#scope">Project Scope</a></li>
+
+        <li class="toc-section"><a href="#structure"></a>Project Structure</li>
+        <ul class="toc-sub">
+            <li><a href="#landscape">1. System Landscape</a></li>
+            <li><a href="#source-model">2. Source Transaction Data Model</a></li>
+            <li><a href="#validation">3. Validation & Standardization</a></li>
+            <li><a href="#mapping">4. Mapping & Accounting Rules</a></li>
+            <li><a href="#outputs">5. Output Data Sets</a></li>
+            <li><a href="#recon">6. Daily Reconciliation Design</a></li>
+        </ul>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+
+      <h1>Insurance Finance Processing Layer Mini-Design: Policy/Claims/Commission to GL</h1>
+      <p><em></em></p>
+
+      <section id="background">
+        <h2>📌 Project Background</h2>
+        <p>
+          Insurance finance depends on transaction events from multiple front-end systems, including Policy Administration, Claims, and Commission systems. These business events do not post directly to the General Ledger and require an intermediate processing layer. Manual Excel-based reconciliation leads to inconsistent data definitions, frequent breaks, slow closing, and weak audit traceability as volume and complexity increase.
+        </p>
+      </section>
+
+      <section id="objectives">
+        <h2>🎯 Project Objectives</h2>
+        <ul>
+          <li>Design a reusable Finance Processing / ETL layer for insurance transactions</li>
+          <li>Standardize and validate business events before accounting</li>
+          <li>Map transactions to configurable accounting rules and dimensions</li>
+          <li>Enable daily reconciliation and exception management</li>
+          <li>Provide end‑to‑end data lineage for close and audit</li>
+        </ul>
+      </section>
+
+      <section id="scope">
+        <h2>📦 Project Scope</h2>
+        <ul>
+          <li>Covers three core front-end systems (assuming that front-end systems provide daily data extracts in CSV files as inputs in this project):</li>
+          <ul>
+            <li>Policy Administration System</li>
+            <li>Claim System</li>
+            <li>Commission System</li>
+          </ul>
+        </ul>  
+
+        <ul>
+            <li>Processing granularity: daily transaction-level data.</li>
+        </ul>
+          
+        <ul>
+            <li>Outputs include:</li>
+            <ul>
+                <li>GL posting-ready dataset</li>
+                <li>Daily reconciliation dataset</li>
+                <li>Exception and issue tracking log</li>
+            </ul>
+        </ul>
+          
+      </section>
+
+      <section id="structure">
+        <h2>🎯 Project Structure</h2>
+        <ul>
+            <h3>System Landscape</h3>
+                <ul>
+                    <li>Defines the end-to-end data flow and responsibility boundaries across front-end business systems, the finance processing layer, and the General Ledger.</li>
+                </ul>
+
+            <h3>Source Transaction Data Model</h3>
+                <ul>
+                    <li>Specifies the minimum required transaction fields from each source system to ensure consistent ingestion, traceability, and downstream processing.</li>
+                </ul>
+
+            <h3>Validation & Standardization</h3>
+                <ul>
+                    <li>Applies data quality checks and standardization rules to ensure source transactions are complete, valid, and ready for financial processing.</li>
+                </ul>
+
+            <h3>Mapping & Accounting Rules</h3>
+                <ul>
+                    <li>Maps business events to financial dimensions and accounting posting logic using configurable rule matrices.</li>
+                </ul>
+
+            <h3>Output Data Sets</h3>
+                <ul>
+                    <li>Produces posting-ready journal data, reconciliation summaries, and exception logs for GL posting, control, and reporting.</li>
+                </ul>
+
+            <h3>Daily Reconciliation Design</h3>
+                <ul>
+                    <li>Defines a structured daily reconciliation process to identify, classify, and resolve differences between source systems and the General Ledger.</li>
+                </ul>
+
+        </ul>
+      </section>
+
+      <section id="landscape">
+        <h2>🗺️ 1. System Landscape</h2>
+        <p>
+          This architecture shows the end-to-end data flow and defines clear responsibility boundaries across systems.
+        </p>
+        <div class="spacer"></div>
+
+        <pre class="mermaid"> 
+            flowchart LR
+
+            %% Source Systems
+            subgraph S["Source Systems"]
+                PAS["Policy Admin System<br/>Policy events / Premium / Refund"]
+                CLS["Claims System<br/>Claim events / Reserve / Payment"]
+                CMS["Commission System<br/>Accrual / Payment / Clawback"]
+            end
+
+            %% Finance Processing / ETL Layer
+            subgraph FPL["Finance Processing / ETL Layer"]
+                EX["Source Extracts<br/>CSV / API / Interface Tables"]
+                STG["Staging<br/>Raw landing + basic checks"]
+                TRN["Transformation<br/>Cleansing & standardization"]
+                MAP["Mapping & Rules Engine<br/>Account & dimension mapping"]
+                PRD["Posting-ready Output<br/>GL staging / posting file"]
+                EXC["Exception & Audit Log<br/>DQ issues / rejects / lineage"]
+            end
+
+            %% GL & Reporting
+            subgraph GLR["GL & Finance Reporting"]
+                GL["General Ledger<br/>Journal posting"]
+                RPT["Finance Reporting<br/>TB / MIS / IFRS"]
+                REC["Reconciliation<br/>Source vs GL"]
+            end
+
+            %% Data Flows
+            PAS --> EX
+            CLS --> EX
+            CMS --> EX
+
+            EX --> STG --> TRN --> MAP --> PRD --> GL --> RPT
+            GL --> REC
+
+            STG --> EXC
+            TRN --> EXC
+            MAP --> EXC
+            REC --> EXC 
+        </pre>	
+
+        <div class="spacer"></div>
+            <p>On the left are three <b>front-end business systems</b>:</p>
+                <ul>
+                    <li>The Policy Administration System, which manages policy and premium-related transaction events.</li>
+                    <li>The Claims System, which handles claim reserves and claim payments.</li>
+                    <li>The Commission System, which manages agent commission accrual and settlement.</li>
+                    <p>These systems generate a large volume of daily transactions, but the data is not directly suitable for financial posting.</p>
+                </ul>
+
+            <div class="spacer"></div>
+
+            <p>At the center is the <b>Finance Processing / ETL Layer</b>, which serves as the core of the architecture. It is responsible for:</p>
+                <ul>
+                    <li>Ingesting transaction data from source systems.</li>
+                    <li>Staging data through as-is ingestion, batch-based landing, and technical integrity checks, to separate data reception from data processing and to preserve raw evidence for audit, re-run, and rollback.</li>
+                    <li>Performing data validation, cleansing, and standardization.</li>
+                    <li>Mapping business events to finance-recognizable accounting dimensions and posting logic based on predefined rules.</li>
+                    <li>Producing posting-ready datasets for the General Ledger.</li>
+                    <p>Throughout this process, all data quality issues and exceptions are captured in exception and audit logs to ensure traceability and control.</p>
+                </ul>
+
+            <div class="spacer"></div>
+
+            <p>On the right is the <b>General Ledger and financial reporting layer</b>, where posting data is used for period close and financial analysis. Daily reconciliation compares GL results with source systems to identify and investigate differences in a timely manner.</p>
+
+      </section>
+
+      <section id="source-model">
+        <h2>🧩 2. Source Transaction Data Model</h2>
+        <p>
+          This architecture shows the end-to-end data flow and defines clear responsibility boundaries across systems.
+        </p>
+        <div class="spacer"></div>
+        <h3>Policy Administration System</h3>
+        <p>Records policy lifecycle and premium-related transaction events, including policy issuance, billing, premium collection, refunds, charges, and policy status changes.</p>
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Data Schema Table</title>
+				<style>
+						body { background-color: #000; color: #fff; font-family: sans-serif; }
+						h2 { color: #fff; font-size: 1rem}
+						table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+						th, td { border: 1px solid #444; padding: 10px; text-align: left; background-color: #000; color: #fff; }
+						th { font-weight: bold; }
+						.required-y { color: #d9534f; font-weight: bold; }
+						code { background-color: #333; color: #fff; padding: 2px 4px; border-radius: 4px; }
+				</style>
+
+				<h2>Table: pas_transactions</h2>
+				<table>
+						<thead>
+								<tr>
+										<th>Field</th>
+										<th>Type</th>
+										<th>Required</th>
+										<th>Description</th>
+										<th>Example</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td>source_system</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system identifier</td>
+										<td><code>PAS</code></td>
+								</tr>
+								<tr>
+										<td>batch_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Data extraction batch ID (daily or per run)</td>
+										<td><code>PAS_20260208_01</code></td>
+								</tr>
+								<tr>
+										<td>load_ts</td>
+										<td>DATETIME</td>
+										<td class="required-y">Y</td>
+										<td>Ingestion timestamp at staging layer</td>
+										<td><code>2026-02-08T02:05:10</code></td>
+								</tr>
+								<tr>
+										<td>policy_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Internal policy ID</td>
+										<td><code>P00001234</code></td>
+								</tr>
+								<tr>
+										<td>policy_no</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>External / business policy number</td>
+										<td><code>SG-ILP-240001</code></td>
+								</tr>
+								<tr>
+										<td>policy_country</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Policy issuing country or market</td>
+										<td><code>SG</code></td>
+								</tr>
+								<tr>
+										<td>transaction_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system transaction ID (system-specific)</td>
+										<td><code>PAS_TXN_100001</code></td>
+								</tr>
+								<tr>
+										<td>source_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Unified source event ID used for cross-system de-duplication and traceability</td>
+										<td><code>PAS_TXN_100001</code></td>
+								</tr>
+								<tr>
+										<td>event_type</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Business event type (see defined enum list)</td>
+										<td><code>PREMIUM_RECEIVED</code></td>
+								</tr>
+								<tr>
+										<td>transaction_date</td>
+										<td>DATE</td>
+										<td class="required-y">Y</td>
+										<td>Business transaction date</td>
+										<td><code>2026-01-15</code></td>
+								</tr>
+								<tr>
+										<td>effective_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Effective date for coverage or timing logic</td>
+										<td><code>2026-01-15</code></td>
+								</tr>
+								<tr>
+										<td>posting_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Posting / recognition date (may be derived by processing layer)</td>
+										<td><code>2026-01-16</code></td>
+								</tr>
+								<tr>
+										<td>amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td>N</td>
+										<td>Transaction amount (nullable for non-monetary events)</td>
+										<td><code>1200.00</code></td>
+								</tr>
+								<tr>
+										<td>currency</td>
+										<td>STRING(3)</td>
+										<td>N</td>
+										<td>Transaction currency</td>
+										<td><code>SGD</code></td>
+								</tr>
+								<tr>
+										<td>product_code</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Product code</td>
+										<td><code>LIFE_WL_01</code></td>
+								</tr>
+								<tr>
+										<td>plan_code</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Plan or scheme code</td>
+										<td><code>PLAN_A</code></td>
+								</tr>
+								<tr>
+										<td>customer_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Customer / policyholder ID</td>
+										<td><code>C0000456</code></td>
+								</tr>
+								<tr>
+										<td>payer_id</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Payer ID (may differ from customer)</td>
+										<td><code>C0000456</code></td>
+								</tr>
+								<tr>
+										<td>payment_method</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Payment method</td>
+										<td><code>GIRO</code></td>
+								</tr>
+								<tr>
+										<td>policy_status</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Policy status after the event (used for reconciliation support)</td>
+										<td><code>IN_FORCE</code></td>
+								</tr>
+								<tr>
+										<td>notes</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Remarks or reason code</td>
+										<td><code>AUTO_DEBIT_FAIL</code></td>
+								</tr>
+						</tbody>
+				</table>
+
+
+        <div class="spacer"></div>
+        <h3>Claims System</h3>
+        <p>Records claim lifecycle events and financial movements, including claim reporting, reserve setup and adjustments, claim payments, recoveries, and claim status changes.</p>
+        <div class="spacer"></div>
+
+
+				<meta charset="UTF-8">
+				<title>Claims Data Schema Table</title>
+				<style>
+						body { background-color: #000; color: #fff; font-family: sans-serif; }
+						/* 缩小的标题样式 */
+						h2 { color: #fff; font-size: 1rem}
+						table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem; }
+						th, td { border: 1px solid #444; padding: 10px; text-align: left; background-color: #000; color: #fff; }
+						th { font-weight: bold; background-color: #111; color: #aaa; }
+						.required-y { color: #ff4d4f; font-weight: bold; }
+						code { background-color: #222; color: #00ff00; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+				</style>
+
+				<h2>Table: claims_transactions</h2>
+				<table>
+						<thead>
+								<tr>
+										<th>Field</th>
+										<th>Type</th>
+										<th>Required</th>
+										<th>Description</th>
+										<th>Example</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td>source_system</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system identifier</td>
+										<td><code>CLAIMS</code></td>
+								</tr>
+								<tr>
+										<td>batch_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Data extraction batch ID</td>
+										<td><code>CLM_20260208_01</code></td>
+								</tr>
+								<tr>
+										<td>load_ts</td>
+										<td>DATETIME</td>
+										<td class="required-y">Y</td>
+										<td>Ingestion timestamp at staging layer</td>
+										<td><code>2026-02-08T02:10:05</code></td>
+								</tr>
+								<tr>
+										<td>claim_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Claim ID</td>
+										<td><code>CLM0002001</code></td>
+								</tr>
+								<tr>
+										<td>policy_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Related policy ID</td>
+										<td><code>P00001003</code></td>
+								</tr>
+								<tr>
+										<td>claim_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Claim system event ID</td>
+										<td><code>CLM_EVT_900001</code></td>
+								</tr>
+								<tr>
+										<td>source_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Unified source event ID for cross-batch de-duplication and traceability</td>
+										<td><code>CLM_EVT_900001</code></td>
+								</tr>
+								<tr>
+										<td>event_type</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Business event type (see defined enum list)</td>
+										<td><code>CLAIM_REPORTED</code></td>
+								</tr>
+								<tr>
+										<td>event_date</td>
+										<td>DATE</td>
+										<td class="required-y">Y</td>
+										<td>Business event date</td>
+										<td><code>2026-01-20</code></td>
+								</tr>
+								<tr>
+										<td>posting_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Posting date (may be derived by processing layer)</td>
+										<td><code>2026-01-21</code></td>
+								</tr>
+								<tr>
+										<td>claim_status</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Claim status after the event</td>
+										<td><code>OPEN</code></td>
+								</tr>
+								<tr>
+										<td>reserve_amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td>N</td>
+										<td>Change in claim reserve amount (+ / -)</td>
+										<td><code>5000.00</code></td>
+								</tr>
+								<tr>
+										<td>payment_id</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Claim payment ID</td>
+										<td><code>PAY0003001</code></td>
+								</tr>
+								<tr>
+										<td>payee</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Payment recipient (customer, hospital, etc.)</td>
+										<td><code>HOSPITAL_A</code></td>
+								</tr>
+								<tr>
+										<td>payment_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Payment date</td>
+										<td><code>2026-01-28</code></td>
+								</tr>
+								<tr>
+										<td>payment_amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td>N</td>
+										<td>Claim payment amount</td>
+										<td><code>1200.00</code></td>
+								</tr>
+								<tr>
+										<td>currency</td>
+										<td>STRING(3)</td>
+										<td>N</td>
+										<td>Currency</td>
+										<td><code>SGD</code></td>
+								</tr>
+								<tr>
+										<td>payment_status</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Payment status (success / fail / reversal)</td>
+										<td><code>SUCCESS</code></td>
+								</tr>
+								<tr>
+										<td>bank_reference</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Bank transaction or reference number</td>
+										<td><code>BNKREF123</code></td>
+								</tr>
+								<tr>
+										<td>recovery_type</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Recovery type (subrogation / salvage / third-party)</td>
+										<td><code>THIRD_PARTY</code></td>
+								</tr>
+								<tr>
+										<td>recovery_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Recovery date</td>
+										<td><code>2026-02-05</code></td>
+								</tr>
+								<tr>
+										<td>recovery_amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td>N</td>
+										<td>Recovery amount</td>
+										<td><code>300.00</code></td>
+								</tr>
+								<tr>
+										<td>notes</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Remarks or reason code</td>
+										<td><code>RESERVE_SETUP</code></td>
+								</tr>
+						</tbody>
+				</table>
+
+
+        <div class="spacer"></div>
+        <h3>Commission System</h3>
+        <p>Records commission calculation, accrual, adjustment, and payment events related to agents or distribution channels, based on policy and premium activities.</p>
+        <div class="spacer"></div>
+
+
+				<meta charset="UTF-8">
+				<title>Commission Data Schema Table</title>
+				<style>
+						body { background-color: #000; color: #fff; font-family: sans-serif; }
+						/* 缩小的标题样式 */
+						h2 { color: #fff; font-size: 1rem; }
+						table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem; }
+						th, td { border: 1px solid #444; padding: 10px; text-align: left; background-color: #000; color: #fff; }
+						th { font-weight: bold; background-color: #111; color: #aaa; }
+						.required-y { color: #ff4d4f; font-weight: bold; }
+						code { background-color: #222; color: #00ff00; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+				</style>
+
+
+				<h2>Table: commission_transactions</h2>
+				<table>
+						<thead>
+								<tr>
+										<th>Field</th>
+										<th>Type</th>
+										<th>Required</th>
+										<th>Description</th>
+										<th>Example</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td>source_system</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system identifier</td>
+										<td><code>COMM</code></td>
+								</tr>
+								<tr>
+										<td>batch_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Data extraction batch ID</td>
+										<td><code>COMM_20260208_01</code></td>
+								</tr>
+								<tr>
+										<td>load_ts</td>
+										<td>DATETIME</td>
+										<td class="required-y">Y</td>
+										<td>Ingestion timestamp at staging layer</td>
+										<td><code>2026-02-08T02:12:30</code></td>
+								</tr>
+								<tr>
+										<td>commission_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Commission system event ID</td>
+										<td><code>COMM_EVT_700001</code></td>
+								</tr>
+								<tr>
+										<td>source_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Unified source event ID for cross-batch de-duplication and traceability</td>
+										<td><code>COMM_EVT_700001</code></td>
+								</tr>
+								<tr>
+										<td>policy_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Related policy ID</td>
+										<td><code>P00001001</code></td>
+								</tr>
+								<tr>
+										<td>policy_no</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Policy number</td>
+										<td><code>SG-LIFE-240001</code></td>
+								</tr>
+								<tr>
+										<td>agent_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Agent or distributor ID</td>
+										<td><code>A000301</code></td>
+								</tr>
+								<tr>
+										<td>channel_id</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Distribution channel ID (may differ from agent)</td>
+										<td><code>CH_BROKER</code></td>
+								</tr>
+								<tr>
+										<td>product_code</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Product code</td>
+										<td><code>LIFE_WL_01</code></td>
+								</tr>
+								<tr>
+										<td>plan_code</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Plan or scheme code</td>
+										<td><code>PLAN_A</code></td>
+								</tr>
+								<tr>
+										<td>event_type</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Business event type (see defined enum list)</td>
+										<td><code>COMM_ACCRUED</code></td>
+								</tr>
+								<tr>
+										<td>commission_type</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Commission type (INITIAL / RENEWAL / BONUS / OVERRIDE)</td>
+										<td><code>INITIAL</code></td>
+								</tr>
+								<tr>
+										<td>trigger_event</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Triggering event (e.g. premium paid, policy issued)</td>
+										<td><code>PREMIUM_RECEIVED</code></td>
+								</tr>
+								<tr>
+										<td>earning_period</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Earning period (YYYY-MM)</td>
+										<td><code>2026-01</code></td>
+								</tr>
+								<tr>
+										<td>base_amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td>N</td>
+										<td>Commission base amount</td>
+										<td><code>1200.00</code></td>
+								</tr>
+								<tr>
+										<td>rate</td>
+										<td>DECIMAL(8,5)</td>
+										<td>N</td>
+										<td>Commission rate</td>
+										<td><code>0.15000</code></td>
+								</tr>
+								<tr>
+										<td>commission_amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td>N</td>
+										<td>Commission amount (+ / -)</td>
+										<td><code>180.00</code></td>
+								</tr>
+								<tr>
+										<td>accrual_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Accrual date</td>
+										<td><code>2026-01-03</code></td>
+								</tr>
+								<tr>
+										<td>posting_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Posting date</td>
+										<td><code>2026-01-03</code></td>
+								</tr>
+								<tr>
+										<td>adjustment_reason_code</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Adjustment or chargeback reason code</td>
+										<td><code>LAPSE_CHARGEBACK</code></td>
+								</tr>
+								<tr>
+										<td>original_reference</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Reference to original commission, premium, or payment</td>
+										<td><code>PAS_TXN_100003</code></td>
+								</tr>
+								<tr>
+										<td>payment_id</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Commission payment ID</td>
+										<td><code>COMM_PAY_50001</code></td>
+								</tr>
+								<tr>
+										<td>payment_date</td>
+										<td>DATE</td>
+										<td>N</td>
+										<td>Payment date</td>
+										<td><code>2026-01-31</code></td>
+								</tr>
+								<tr>
+										<td>payment_status</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Payment status (success / fail / reversal)</td>
+										<td><code>SUCCESS</code></td>
+								</tr>
+								<tr>
+										<td>bank_reference</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Bank transaction or reference number</td>
+										<td><code>BNK-COMM-001</code></td>
+								</tr>
+								<tr>
+										<td>withholding_tax</td>
+										<td>DECIMAL(18,2)</td>
+										<td>N</td>
+										<td>Withholding tax amount (if applicable)</td>
+										<td><code>0.00</code></td>
+								</tr>
+								<tr>
+										<td>notes</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Remarks or notes</td>
+										<td><code>RULE_V1</code></td>
+								</tr>
+						</tbody>
+				</table>
+
+
+      </section>
+
+      <section id="validation">
+        <h2>✅ 3. Validation & Standardization</h2>
+        <h3>Validation Rule</h3>
+        <div class="spacer"></div>
+        <ul>
+          <li>Validation rules ensure that source transactions are suitable for downstream financial processing. They are grouped into three categories:</li>
+          <ul>
+            <li><b>Completeness Checks</b>: Ensure required fields are present and transactions are not missing or duplicated.</li>
+            <li><b>Validity Checks</b>: Ensure values and dates are logically correct, such as amount signs, currency codes, and date relationships.</li>
+            <li><b>Reference Integrity Checks</b>: Ensure key references (e.g. products, channels, policies, claims) exist and can be resolved against master data.</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Each rule results in one of the following actions:</li>
+          <ul>
+            <li><b>Reject</b> – The record is excluded from downstream processing and logged with status `REJECTED`.</li>
+            <li><b>Exception (Quarantine)</b> – The record is held for investigation and logged with status `QUARANTINED`.</li>
+            <li><b>Warn</b> – The record continues processing, with a warning recorded for traceability.</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+				<meta charset="UTF-8">
+				<title>Data Validation Rules</title>
+				<style>
+						/* 全局黑色背景 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹效果 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 重点列颜色 */
+						.rule-id { color: #fff; font-weight: bold; }
+						.category { color: #aaa; }
+						
+						/* Action 状态样式 */
+						.action-reject { color: #ff4d4f; font-weight: bold; }
+						.action-quarantine { color: #faad14; font-weight: bold; }
+
+						/* Fields 圆角灰色框样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; line-height: 1.8; display: inline-block; margin: 2px 0; }
+				</style>
+				<h2>Completeness Check</h2>
+				<table>
+						<thead>
+								<tr>
+										<th>Rule ID</th>
+										<th>Category</th>
+										<th>Scope</th>
+										<th>Rule Description</th>
+										<th>Fields</th>
+										<th>Action</th>
+										<th>Notes</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="rule-id">C-001</td>
+										<td class="category">Completeness</td>
+										<td>All</td>
+										<td>Missing mandatory system-level fields</td>
+										<td><code>source_system</code> <code>batch_id</code> <code>load_ts</code></td>
+										<td class="action-reject">REJECT</td>
+										<td>Without batch info, traceability is lost</td>
+								</tr>
+								<tr>
+										<td class="rule-id">C-002</td>
+										<td class="category">Completeness</td>
+										<td>PAS</td>
+										<td>Missing mandatory PAS business fields</td>
+										<td><code>policy_id</code> <code>policy_no</code> <code>transaction_id</code> <code>event_type</code> <code>transaction_date</code> <code>product_code</code> <code>customer_id</code></td>
+										<td class="action-reject">REJECT</td>
+										<td>Minimum required fields for PAS events</td>
+								</tr>
+								<tr>
+										<td class="rule-id">C-003</td>
+										<td class="category">Completeness</td>
+										<td>Claims</td>
+										<td>Missing mandatory Claims business fields</td>
+										<td><code>claim_id</code> <code>policy_id</code> <code>claim_event_id</code> <code>event_type</code> <code>event_date</code></td>
+										<td class="action-reject">REJECT</td>
+										<td>claim_id must always be present</td>
+								</tr>
+								<tr>
+										<td class="rule-id">C-004</td>
+										<td class="category">Completeness</td>
+										<td>Commission</td>
+										<td>Missing mandatory Commission business fields</td>
+										<td><code>commission_event_id</code> <code>policy_id</code> <code>policy_no</code> <code>agent_id</code> <code>product_code</code> <code>event_type</code></td>
+										<td class="action-reject">REJECT</td>
+										<td>Commission must be traceable to agent</td>
+								</tr>
+								<tr>
+										<td class="rule-id">C-005</td>
+										<td class="category">Completeness</td>
+										<td>All</td>
+										<td>Duplicate transaction/event ID within same source</td>
+										<td><code>transaction_id</code> <code>claim_event_id</code> <code>commission_event_id</code></td>
+										<td class="action-reject">REJECT</td>
+										<td>Prevent duplicate posting and reconciliation</td>
+								</tr>
+								<tr>
+										<td class="rule-id">C-006</td>
+										<td class="category">Completeness</td>
+										<td>All</td>
+										<td>Duplicate (source_system, source_event_id) in batch</td>
+										<td><code>source_system</code> <code>source_event_id</code></td>
+										<td class="action-reject">REJECT</td>
+										<td>Prevent duplicate extracts or file re-delivery</td>
+								</tr>
+								<tr>
+										<td class="rule-id">C-007</td>
+										<td class="category">Completeness</td>
+										<td>Claims</td>
+										<td>CLAIM_PAID events must have payment info</td>
+										<td><code>payment_id</code> <code>payment_amount</code></td>
+										<td class="action-quarantine">QUARANTINE</td>
+										<td>Fixable: missing fields require source backfill</td>
+								</tr>
+						</tbody>
+				</table>
+
+				<meta charset="UTF-8">
+				<title>Data Validity Rules</title>
+				<style>
+						/* 全局黑色背景 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: top; }
+
+						/* 斑马纹效果 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 重点列颜色 */
+						.rule-id { color: #fff; font-weight: bold; }
+						.category { color: #aaa; }
+						
+						/* Action 状态样式 */
+						.action-reject { color: #ff4d4f; font-weight: bold; }
+						.action-quarantine { color: #faad14; font-weight: bold; }
+
+						/* Fields 样式：灰色圆角框 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; display: inline-block; margin: 2px 0; }
+						
+						/* 异常说明文字样式 */
+						.exceptions { color: #bbb; font-size: 0.85rem; line-height: 1.5; }
+				</style>
+
+				<h2>Validity Check</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 8%">Rule ID</th>
+										<th style="width: 10%">Category</th>
+										<th style="width: 8%">Scope</th>
+										<th style="width: 20%">Rule Description</th>
+										<th style="width: 15%">Fields</th>
+										<th style="width: 10%">Action</th>
+										<th style="width: 29%">Allowed Exceptions</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="rule-id">V-001</td>
+										<td class="category">Validity</td>
+										<td>All</td>
+										<td>Currency must be in the allowed currency list</td>
+										<td><code>currency</code></td>
+										<td class="action-reject">REJECT</td>
+										<td class="exceptions">Currency may be NULL only for non-monetary events; otherwise REJECT</td>
+								</tr>
+								<tr>
+										<td class="rule-id">V-002</td>
+										<td class="category">Validity</td>
+										<td>All</td>
+										<td>Amount must be non-negative</td>
+										<td><code>amount</code> <code>event_type</code></td>
+										<td class="action-reject">REJECT</td>
+										<td class="exceptions">Negative allowed for PAS REFUND_REVERSAL / POLICY_SURRENDERED; COMM_CHARGEBACK / COMM_REVERSED; Claims reserve release (see V-003)</td>
+								</tr>
+								<tr>
+										<td class="rule-id">V-003</td>
+										<td class="category">Validity</td>
+										<td>Claims</td>
+										<td>Reserve amount must align with event type</td>
+										<td><code>reserve_amount</code> <code>event_type</code></td>
+										<td class="action-quarantine">QUARANTINE</td>
+										<td class="exceptions">RESERVE_SETUP / RESERVE_UPDATE may be positive or negative; CLAIM_PAID typically releases reserve (negative)</td>
+								</tr>
+								<tr>
+										<td class="rule-id">V-004</td>
+										<td class="category">Validity</td>
+										<td>PAS</td>
+										<td>effective_date <= posting_date (if provided)</td>
+										<td><code>effective_date</code> <code>posting_date</code></td>
+										<td class="action-quarantine">QUARANTINE</td>
+										<td class="exceptions">Back-dated endorsements (e.g. COVERAGE_CHANGE) allowed → WARN</td>
+								</tr>
+								<tr>
+										<td class="rule-id">V-005</td>
+										<td class="category">Validity</td>
+										<td>All</td>
+										<td>Date fields must be valid and not earlier than min date</td>
+										<td><code>transaction_date</code> <code>event_date</code> <code>posting_date</code></td>
+										<td class="action-reject">REJECT</td>
+										<td class="exceptions">Configurable minimum date, e.g. 2000-01-01</td>
+								</tr>
+								<tr>
+										<td class="rule-id">V-006</td>
+										<td class="category">Validity</td>
+										<td>Commission</td>
+										<td>Commission rate must be within 0–1 or 0–100%</td>
+										<td><code>rate</code></td>
+										<td class="action-quarantine">QUARANTINE</td>
+										<td class="exceptions">NULL rate allowed for non-calculation events</td>
+								</tr>
+								<tr>
+										<td class="rule-id">V-007</td>
+										<td class="category">Validity</td>
+										<td>All</td>
+										<td>Cross-batch duplicate detected in historical data</td>
+										<td><code>source_system</code> <code>source_event_id</code></td>
+										<td class="action-reject">REJECT</td>
+										<td class="exceptions">Prevents re-processing of events already validated in previous batches</td>
+								</tr>
+						</tbody>
+				</table>
+
+				<meta charset="UTF-8">
+				<title>Data Reference Integrity Rules</title>
+				<style>
+						/* 全局黑色背景 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: top; }
+
+						/* 斑马纹效果 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 重点列颜色 */
+						.rule-id { color: #fff; font-weight: bold; }
+						.category { color: #aaa; }
+						
+						/* Action 状态样式 */
+						.action-reject { color: #ff4d4f; font-weight: bold; }
+						.action-quarantine { color: #faad14; font-weight: bold; }
+
+						/* Reference Table 样式：淡蓝色 */
+						.ref-table { color: #4fa3d1; font-family: Consolas, monospace; font-size: 0.85rem; }
+
+						/* Fields 样式：灰色圆角框 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; display: inline-block; margin: 2px 0; }
+						
+						/* 备注说明 */
+						.notes { color: #bbb; font-size: 0.85rem; line-height: 1.5; }
+				</style>
+
+				<h2>Reference Integrity Check</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 8%">Rule ID</th>
+										<th style="width: 12%">Category</th>
+										<th style="width: 10%">Scope</th>
+										<th style="width: 20%">Rule Description</th>
+										<th style="width: 15%">Reference Table</th>
+										<th style="width: 12%">Fields</th>
+										<th style="width: 10%">Action</th>
+										<th style="width: 13%">Notes</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="rule-id">R-001</td>
+										<td class="category">Reference Integrity</td>
+										<td>PAS / Comm</td>
+										<td>product_code must exist in mapping table</td>
+										<td class="ref-table">dim_product_map</td>
+										<td><code>product_code</code></td>
+										<td class="action-quarantine">QUARANTINE</td>
+										<td class="notes">Fixable: add master data or correct product code</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-002</td>
+										<td class="category">Reference Integrity</td>
+										<td>Commission</td>
+										<td>channel_id must be valid (if provided)</td>
+										<td class="ref-table">dim_channel_map</td>
+										<td><code>channel_id</code></td>
+										<td class="action-quarantine">QUARANTINE</td>
+										<td class="notes">channel_id is optional, but must be valid if populated</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-003</td>
+										<td class="category">Reference Integrity</td>
+										<td>All</td>
+										<td>policy_id must exist in policy master</td>
+										<td class="ref-table">policy_master</td>
+										<td><code>policy_id</code></td>
+										<td class="action-quarantine">QUARANTINE</td>
+										<td class="notes">Especially important for Claims and Commission</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-004</td>
+										<td class="category">Reference Integrity</td>
+										<td>Claims</td>
+										<td>claim_id must exist in claims master</td>
+										<td class="ref-table">claim_master</td>
+										<td><code>claim_id</code></td>
+										<td class="action-quarantine">REJECT / QUARANTINE</td>
+										<td class="notes">QUARANTINE allowed if claim_id is present in event data</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-005</td>
+										<td class="category">Reference Integrity</td>
+										<td>All</td>
+										<td>Key enum values must be in allowed list</td>
+										<td class="ref-table">event_type</td>
+										<td><code>event_type</code></td>
+										<td class="action-reject">REJECT</td>
+										<td class="notes">Unknown event_type requires governance</td>
+								</tr>
+						</tbody>
+				</table>
+
+
+        <h3>Exception Log Schema</h3>
+        <div class="spacer"></div>
+        <p>It is designed to trace issues back to the source system, source record, batch, field, and rule. It supports owner assignment (Finance/IT/Source System) and retains both original and standardized values to enable investigation and reprocessing.</p>
+        <div class="spacer"></div>
+				<meta charset="UTF-8">
+				<title>Exception & Audit Log Schema</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 字段名加粗 */
+						td:first-child { font-weight: 500; color: #fff; }
+
+						/* 必填项 Y 的红色 */
+						.required-y { color: #ff4d4f; font-weight: bold; }
+
+						/* Example 的圆角灰色框 */
+						code { background-color: #e0e0e0; color: #333; padding: 4px 8px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; }
+						
+						/* JSON/Snapshot 特殊处理 */
+						.json-text { color: #888; font-style: italic; }
+				</style>
+
+				<h2>Table: etl_exception_log</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 18%">Field</th>
+										<th style="width: 12%">Type</th>
+										<th style="width: 8%">Required</th>
+										<th style="width: 42%">Description</th>
+										<th style="width: 20%">Example</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td>exception_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Unique exception ID (UUID)</td>
+										<td><code>EXC_20260208_000001</code></td>
+								</tr>
+								<tr>
+										<td>batch_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Data processing batch ID</td>
+										<td><code>PAS_20260208_01</code></td>
+								</tr>
+								<tr>
+										<td>load_ts</td>
+										<td>DATETIME</td>
+										<td class="required-y">Y</td>
+										<td>Ingestion timestamp</td>
+										<td><code>2026-02-08T02:05:10</code></td>
+								</tr>
+								<tr>
+										<td>source_system</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system (PAS / CLAIMS / COMM)</td>
+										<td><code>PAS</code></td>
+								</tr>
+								<tr>
+										<td>source_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Unified source event ID</td>
+										<td><code>PAS_TXN_100007</code></td>
+								</tr>
+								<tr>
+										<td>source_record_key</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Optional source system composite key</td>
+										<td><code>P00001002</code></td>
+								</tr>
+								<tr>
+										<td>rule_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Validation rule ID triggered</td>
+										<td><code>V-002</code></td>
+								</tr>
+								<tr>
+										<td>rule_category</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Rule category (Completeness / Validity / ReferenceIntegrity)</td>
+										<td><code>Validity</code></td>
+								</tr>
+								<tr>
+										<td>severity</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Severity level (REJECT / QUARANTINE / WARN)</td>
+										<td><code>QUARANTINE</code></td>
+								</tr>
+								<tr>
+										<td>status</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Exception status (OPEN / IN_PROGRESS / RESOLVED / WAIVED)</td>
+										<td><code>OPEN</code></td>
+								</tr>
+								<tr>
+										<td>detected_stage</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Processing stage where the issue was detected</td>
+										<td><code>VALIDATION</code></td>
+								</tr>
+								<tr>
+										<td>field_name</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Field that triggered the exception</td>
+										<td><code>currency</code></td>
+								</tr>
+								<tr>
+										<td>field_value</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Original field value (stringified)</td>
+										<td><code>ABC</code></td>
+								</tr>
+								<tr>
+										<td>expected_value</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Expected value or rule description</td>
+										<td><code>In allowed currency list</code></td>
+								</tr>
+								<tr>
+										<td>error_message</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Human-readable error message</td>
+										<td><code>Currency not allowed</code></td>
+								</tr>
+								<tr>
+										<td>record_snapshot_json</td>
+										<td>TEXT / JSON</td>
+										<td>N</td>
+										<td>Snapshot of the original record (with masking if required)</td>
+										<td class="json-text"><code>{...}</code></td>
+								</tr>
+								<tr>
+										<td>owner_team</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Owning team (Source IT / Finance Systems / Finance Ops)</td>
+										<td><code>Finance Ops</code></td>
+								</tr>
+								<tr>
+										<td>assigned_to</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Assigned owner</td>
+										<td><code>user123</code></td>
+								</tr>
+								<tr>
+										<td>sla_due_ts</td>
+										<td>DATETIME</td>
+										<td>N</td>
+										<td>SLA due timestamp</td>
+										<td><code>2026-02-08T12:00:00</code></td>
+								</tr>
+								<tr>
+										<td>resolution_action</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Resolution action taken</td>
+										<td><code>Re-extract</code></td>
+								</tr>
+								<tr>
+										<td>resolution_comment</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Resolution comments</td>
+										<td><code>Source sent wrong currency</code></td>
+								</tr>
+								<tr>
+										<td>resolved_ts</td>
+										<td>DATETIME</td>
+										<td>N</td>
+										<td>Resolution timestamp</td>
+										<td><code>2026-02-08T09:30:00</code></td>
+								</tr>
+								<tr>
+										<td>rerun_batch_id</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Reprocessing batch ID (if applicable)</td>
+										<td><code>PAS_20260208_02</code></td>
+								</tr>
+						</tbody>
+				</table>
+        <li>Each record that fails validation is written to the `etl_exception_log`.</li>
+        <li>Records with `severity = REJECT` are excluded from downstream processing, while `QUARANTINE` records are moved to an isolation area (e.g. `etl_quarantine_table`).</li>
+        <li>Exceptions are assigned to the appropriate `owner_team` (Source IT / Finance Systems / Finance).</li>
+        <li>Once resolved, the `status` and `resolution_action` are updated, and reprocessing may be triggered with a new `rerun_batch_id`.</li>
+        <li>Exceptions can be aggregated by rule, system, or batch to support data quality monitoring and dashboard</li>
+
+      </section>
+
+      <section id="mapping">
+        <h2>📐 4. Mapping & Accounting Rules</h2>
+        <div class="spacer"></div>
+        <h3>Dimensions Mapping Matrix</h3>
+        <div class="spacer"></div>
+        <p>Business master data used by finance systems defines where each transaction comes from, what type of business it belongs to, and which entity it is associated with. Through dimension keys, it links accounting rules with dimension mapping tables to form complete journal entries.</p>
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Product Mapping Dimension Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 重点列：产品代码使用代码块风格 */
+						.product-code { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 产品类型/业务线/报告组标签 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; }
+						
+						/* 文本描述 */
+						.product-name { color: #fff; }
+				</style>
+
+
+				<h2>Product Dimension Table</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 20%">product_code</th>
+										<th style="width: 25%">product_name</th>
+										<th style="width: 15%">product_type</th>
+										<th style="width: 20%">line_of_business</th>
+										<th style="width: 20%">reporting_group</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="product-code">LIFE_WL_01</td>
+										<td class="product-name">Whole Life</td>
+										<td><code>LIFE</code></td>
+										<td>Life</td>
+										<td>Traditional Life</td>
+								</tr>
+								<tr>
+										<td class="product-code">LIFE_TERM_01</td>
+										<td class="product-name">Term Life</td>
+										<td><code>LIFE</code></td>
+										<td>Life</td>
+										<td>Protection</td>
+								</tr>
+								<tr>
+										<td class="product-code">ILP_01</td>
+										<td class="product-name">Investment Linked</td>
+										<td><code>ILP</code></td>
+										<td>Life</td>
+										<td>ILP</td>
+								</tr>
+								<tr>
+										<td class="product-code">HEALTH_01</td>
+										<td class="product-name">Medical</td>
+										<td><code>HEALTH</code></td>
+										<td>Health</td>
+										<td>Health</td>
+								</tr>
+						</tbody>
+				</table>
+                <li>dimension key: product_code (from Policy & Commission System)</li>
+
+                <div class="spacer"></div>
+				<meta charset="UTF-8">
+				<title>Channel Mapping Dimension Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1.2rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 渠道代码列样式 */
+						.channel-id { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 分类标签样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; }
+						
+						/* 文本描述 */
+						.channel-name { color: #fff; }
+				</style>
+
+
+				<h2>Channel Dimension Table</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 20%">channel_id</th>
+										<th style="width: 25%">channel_name</th>
+										<th style="width: 30%">distribution_channel</th>
+										<th style="width: 25%">channel_group</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="channel-id">CH_AGENCY</td>
+										<td class="channel-name">Tied Agency</td>
+										<td><code>Agency</code></td>
+										<td>Retail</td>
+								</tr>
+								<tr>
+										<td class="channel-id">CH_BROKER</td>
+										<td class="channel-name">Broker</td>
+										<td><code>Broker</code></td>
+										<td>Retail</td>
+								</tr>
+								<tr>
+										<td class="channel-id">CH_BANCA</td>
+										<td class="channel-name">Bancassurance</td>
+										<td><code>Bancassurance</code></td>
+										<td>Bank</td>
+								</tr>
+								<tr>
+										<td class="channel-id">CH_DIGITAL</td>
+										<td class="channel-name">Digital Direct</td>
+										<td><code>Direct</code></td>
+										<td>Digital</td>
+								</tr>
+						</tbody>
+				</table>
+                <li>dimension key: channel_id (from Commission System)</li>
+
+
+				<meta charset="UTF-8">
+				<title>Customer Segment Mapping Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 客户ID列样式 */
+						.customer-id { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 分群标签样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: "Segoe UI", sans-serif; font-size: 0.85rem; }
+				</style>
+
+
+				<h2>Customer Dimension Table</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 40%">customer_id</th>
+										<th style="width: 60%">customer_segment</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="customer-id">C0001</td>
+										<td><code>Retail</code></td>
+								</tr>
+								<tr>
+										<td class="customer-id">C0002</td>
+										<td><code>High Net Worth</code></td>
+								</tr>
+								<tr>
+										<td class="customer-id">C0003</td>
+										<td><code>SME</code></td>
+								</tr>
+								<tr>
+										<td class="customer-id">C0004</td>
+										<td><code>Corporate</code></td>
+								</tr>
+						</tbody>
+				</table>
+                <li>dimension key: customer_id (from Policy System)</li>
+                <div class="spacer"></div> 
+
+
+				<meta charset="UTF-8">
+				<title>Organization Mapping Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 组织代码列样式 */
+						.org-code { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 中心/区域标签样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; }
+						
+						/* 实体名称 */
+						.entity-name { color: #fff; }
+				</style>
+
+				<h2>Org Dimension Table</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 15%">org_code</th>
+										<th style="width: 25%">entity</th>
+										<th style="width: 20%">cost_center</th>
+										<th style="width: 20%">profit_center</th>
+										<th style="width: 20%">region</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="org-code">SG01</td>
+										<td class="entity-name">AIA Singapore</td>
+										<td><code>SG_FIN</code></td>
+										<td><code>SG_LIFE</code></td>
+										<td>Singapore</td>
+								</tr>
+								<tr>
+										<td class="org-code">SG02</td>
+										<td class="entity-name">AIA Singapore</td>
+										<td><code>SG_HEALTH</code></td>
+										<td><code>SG_HEALTH</code></td>
+										<td>Singapore</td>
+								</tr>
+								<tr>
+										<td class="org-code">HK01</td>
+										<td class="entity-name">AIA Hong Kong</td>
+										<td><code>HK_FIN</code></td>
+										<td><code>HK_LIFE</code></td>
+										<td>Hong Kong</td>
+								</tr>
+						</tbody>
+				</table>
+                <li>dimension key: (derived during ETL from Policy System `policy_country` and `product_code` )</li>
+
+
+        <div class="spacer"></div>        
+        <h3>Posting Rules Matrix</h3>
+        <div class="spacer"></div>
+        <p>
+          An accounting posting rules table defines how each business event is translated into debit and credit accounts, posting dates, and financial dimensions to generate journal entries.
+        </p>
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Accounting Posting Rules Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1.2rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: top; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 规则ID列 */
+						.rule-id { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 借贷方向：Debit（蓝绿色调），Credit（浅金/亮灰色调） */
+						.debit { color: #4fc3f7; font-weight: 500; }
+						.credit { color: #ffd54f; font-weight: 500; }
+
+						/* 标签样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; display: inline-block; margin: 2px 0; }
+						
+						/* 维度列样式 */
+						.dimensions { color: #aaa; font-size: 0.85rem; font-style: italic; }
+				</style>
+
+				<h2>Premium / Revenue-related</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 8%">Rule ID</th>
+										<th style="width: 15%">event_type</th>
+										<th style="width: 10%">product_type</th>
+										<th style="width: 8%">channel</th>
+										<th style="width: 12%">Debit</th>
+										<th style="width: 12%">Credit</th>
+										<th style="width: 12%">Posting Date</th>
+										<th style="width: 13%">Dimensions</th>
+										<th style="width: 10%">Notes</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="rule-id">R-001</td>
+										<td><code>PREMIUM_RECEIVED</code></td>
+										<td>LIFE</td>
+										<td>ALL</td>
+										<td class="debit">Cash</td>
+										<td class="credit">Contract Liability (LRC)</td>
+										<td>payment_date</td>
+										<td class="dimensions">entity, product, channel</td>
+										<td>Premium received, not revenue yet</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-002</td>
+										<td><code>PREMIUM_RECEIVED</code></td>
+										<td>HEALTH</td>
+										<td>ALL</td>
+										<td class="debit">Cash</td>
+										<td class="credit">Contract Liability (LRC)</td>
+										<td>payment_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Same logic across channels</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-003</td>
+										<td><code>REFUND_REVERSAL</code></td>
+										<td>LIFE</td>
+										<td>ALL</td>
+										<td class="debit">Contract Liability (LRC)</td>
+										<td class="credit">Cash</td>
+										<td>refund_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Premium refund</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-004</td>
+										<td><code>POLICY_FEE</code></td>
+										<td>ILP</td>
+										<td>ALL</td>
+										<td class="debit">Cash</td>
+										<td class="credit">Fee Income</td>
+										<td>transaction_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Non-insurance service fee</td>
+								</tr>
+						</tbody>
+				</table>
+
+
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Accounting Posting Rules - Claims</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: top; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 规则ID列 */
+						.rule-id { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 借贷方向颜色标注 */
+						.debit { color: #4fc3f7; font-weight: 500; }
+						.credit { color: #ffd54f; font-weight: 500; }
+
+						/* 标签样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; display: inline-block; margin: 2px 0; }
+						
+						/* 维度列样式 */
+						.dimensions { color: #aaa; font-size: 0.85rem; font-style: italic; }
+				</style>
+
+				<h2>Claims-related</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 8%">Rule ID</th>
+										<th style="width: 15%">event_type</th>
+										<th style="width: 10%">product_type</th>
+										<th style="width: 8%">channel</th>
+										<th style="width: 15%">Debit</th>
+										<th style="width: 15%">Credit</th>
+										<th style="width: 12%">Posting Date</th>
+										<th style="width: 12%">Dimensions</th>
+										<th style="width: 15%">Notes</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="rule-id">R-005</td>
+										<td><code>RESERVE_SETUP</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="debit">Claims Expense</td>
+										<td class="credit">Claims Liability (LIC)</td>
+										<td>event_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Incurred claim</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-006</td>
+										<td><code>RESERVE_UPDATE</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="debit">Claims Expense</td>
+										<td class="credit">Claims Liability (LIC)</td>
+										<td>event_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Reserve adjustment</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-007</td>
+										<td><code>CLAIM_PAID</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="debit">Claims Liability (LIC)</td>
+										<td class="credit">Cash</td>
+										<td>payment_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Settle claim</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-008</td>
+										<td><code>CLAIM_DENIED</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="debit">Claims Liability (LIC)</td>
+										<td class="credit">Claims Expense</td>
+										<td>event_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Release reserve</td>
+								</tr>
+						</tbody>
+				</table>
+
+
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Accounting Posting Rules - Commission</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: top; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 规则ID列 */
+						.rule-id { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 借贷方向颜色标注 */
+						.debit { color: #4fc3f7; font-weight: 500; }
+						.credit { color: #ffd54f; font-weight: 500; }
+
+						/* 标签样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; display: inline-block; margin: 2px 0; }
+						
+						/* 维度列样式 */
+						.dimensions { color: #aaa; font-size: 0.85rem; font-style: italic; }
+				</style>
+
+				<h2>Commission-related</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 8%">Rule ID</th>
+										<th style="width: 15%">event_type</th>
+										<th style="width: 10%">product_type</th>
+										<th style="width: 8%">channel</th>
+										<th style="width: 15%">Debit</th>
+										<th style="width: 15%">Credit</th>
+										<th style="width: 12%">Posting Date</th>
+										<th style="width: 12%">Dimensions</th>
+										<th style="width: 15%">Notes</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="rule-id">R-009</td>
+										<td><code>COMM_ACCRUED</code></td>
+										<td>LIFE</td>
+										<td>AGENCY</td>
+										<td class="debit">Acquisition Cost Asset</td>
+										<td class="credit">Commission Payable</td>
+										<td>accrual_date</td>
+										<td class="dimensions">entity, channel</td>
+										<td>IFRS17 acquisition cash flows</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-010</td>
+										<td><code>COMM_ACCRUED</code></td>
+										<td>LIFE</td>
+										<td>BROKER</td>
+										<td class="debit">Commission Expense</td>
+										<td class="credit">Commission Payable</td>
+										<td>accrual_date</td>
+										<td class="dimensions">entity, channel</td>
+										<td>Expense if not capitalized</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-011</td>
+										<td><code>COMM_PAID</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="debit">Commission Payable</td>
+										<td class="credit">Cash</td>
+										<td>payment_date</td>
+										<td class="dimensions">entity, channel</td>
+										<td>Payment settlement</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-012</td>
+										<td><code>COMM_CHARGEBACK</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="debit">Commission Payable</td>
+										<td class="credit">Acquisition Cost Asset</td>
+										<td>event_date</td>
+										<td class="dimensions">entity, channel</td>
+										<td>Reversal on lapse/surrender</td>
+								</tr>
+						</tbody>
+				</table>
+
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Accounting Posting Rules - Policy Status & Surrender</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：缩小且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #333; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: top; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 规则ID列 */
+						.rule-id { font-family: Consolas, monospace; color: #fff; font-weight: bold; }
+						
+						/* 借贷方向颜色标注 */
+						.debit { color: #4fc3f7; font-weight: 500; }
+						.credit { color: #ffd54f; font-weight: 500; }
+
+						/* 标签样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; display: inline-block; margin: 2px 0; }
+						
+						/* 无分录状态样式 */
+						.no-posting { color: #666; font-style: italic; }
+
+						/* 维度列样式 */
+						.dimensions { color: #aaa; font-size: 0.85rem; font-style: italic; }
+				</style>
+
+				<h2>Endorsement / Status change (no cash)</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 8%">Rule ID</th>
+										<th style="width: 15%">event_type</th>
+										<th style="width: 10%">product_type</th>
+										<th style="width: 8%">channel</th>
+										<th style="width: 15%">Debit</th>
+										<th style="width: 15%">Credit</th>
+										<th style="width: 12%">Posting Date</th>
+										<th style="width: 12%">Dimensions</th>
+										<th style="width: 15%">Notes</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="rule-id">R-013</td>
+										<td><code>POLICY_LAPSED</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="no-posting">——</td>
+										<td class="no-posting">——</td>
+										<td>—</td>
+										<td class="no-posting">—</td>
+										<td>No direct posting, affects future recognition</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-014</td>
+										<td><code>POLICY_REINSTATED</code></td>
+										<td>ALL</td>
+										<td>ALL</td>
+										<td class="no-posting">——</td>
+										<td class="no-posting">——</td>
+										<td>—</td>
+										<td class="no-posting">—</td>
+										<td>No posting, resume coverage</td>
+								</tr>
+								<tr>
+										<td class="rule-id">R-015</td>
+										<td><code>POLICY_SURRENDERED</code></td>
+										<td>LIFE</td>
+										<td>ALL</td>
+										<td class="debit">Contract Liability (LRC)</td>
+										<td class="credit">Cash</td>
+										<td>surrender_date</td>
+										<td class="dimensions">entity, product</td>
+										<td>Surrender payout</td>
+								</tr>
+						</tbody>
+				</table>
+
+       
+
+        <div class="spacer"></div>
+      </section>
+
+      <section id="outputs">
+        <h2>📤 5. Output Data Sets</h2>
+        <h3>Posting-ready Dataset</h3>
+        <div class="spacer"></div>
+        <p>Supports daily accounting operations by providing clean, validated, and fully mapped journal entries that can be posted to the General Ledger without manual adjustment.</p>
+        <div class="spacer"></div>
+        <ul>
+          <li><strong>Posting‑ready dataset</strong> for GL journal posting</li>
+          <li><strong>Reconciliation dataset</strong> for daily source vs GL control</li>
+          <li><strong>Exception dataset</strong> for issue tracking and operations</li>
+        </ul>
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>GL Interface Schema Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：1rem 且带下划线 */
+						h2 { font-size: 1.2rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.85rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #444; font-weight: normal; }
+						td { padding: 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 字段名加粗 */
+						td:first-child { font-weight: 500; color: #fff; font-family: Consolas, monospace; }
+
+						/* 必填项 Y 的红色标注 */
+						.required-y { color: #ff4d4f; font-weight: bold; }
+
+						/* 描述与来源的文字样式 */
+						.source-info { color: #aaa; font-size: 0.8rem; }
+
+						/* 示例/代码块样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; }
+				</style>
+
+				<h2>Table: posting_ready_journal_lines</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 15%">Field</th>
+										<th style="width: 10%">Type</th>
+										<th style="width: 5%">Req</th>
+										<th style="width: 30%">Description</th>
+										<th style="width: 40%">Source / Derivation</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td>gl_batch_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Batch ID sent to the GL</td>
+										<td>Generated by ETL, e.g. <code>GL_20260210_01</code></td>
+								</tr>
+								<tr>
+										<td>gl_posting_date</td>
+										<td>DATE</td>
+										<td class="required-y">Y</td>
+										<td>GL posting date</td>
+										<td>Derived from posting date logic (payment_date / event_date / accrual_date)</td>
+								</tr>
+								<tr>
+										<td>line_no</td>
+										<td>INT</td>
+										<td class="required-y">Y</td>
+										<td>Journal line number</td>
+										<td>Generated by ETL (starts from 1 within the same event)</td>
+								</tr>
+								<tr>
+										<td>account</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>GL account code</td>
+										<td>Output from posting rules matrix</td>
+								</tr>
+								<tr>
+										<td>dr_cr</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Debit / Credit indicator (DR / CR)</td>
+										<td>Output from posting rules matrix</td>
+								</tr>
+								<tr>
+										<td>amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td class="required-y">Y</td>
+										<td>Amount (standardized to positive)</td>
+										<td>Derived from <code>event_amount</code> / <code>reserve_amount</code></td>
+								</tr>
+								<tr>
+										<td>currency</td>
+										<td>STRING(3)</td>
+										<td class="required-y">Y</td>
+										<td>Currency</td>
+										<td>From source event (e.g. <code>SGD</code>, <code>HKD</code>)</td>
+								</tr>
+								<tr>
+										<td>entity</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Legal entity / company code</td>
+										<td>Derived from org mapping (based on product_code / policy prefix)</td>
+								</tr>
+								<tr>
+										<td>cost_center</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Cost center</td>
+										<td>Derived from org mapping</td>
+								</tr>
+								<tr>
+										<td>profit_center</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Profit center</td>
+										<td>Derived from org mapping</td>
+								</tr>
+								<tr>
+										<td>product_code</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Product code (key)</td>
+										<td>From source event</td>
+								</tr>
+								<tr>
+										<td>line_of_business</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Line of business (Life / Health / General)</td>
+										<td>Derived from product mapping</td>
+								</tr>
+								<tr>
+										<td>distribution_channel</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Distribution channel</td>
+										<td>Derived from channel mapping or agent/channel ID</td>
+								</tr>
+								<tr>
+										<td>customer_segment</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Customer segment (optional)</td>
+										<td>Derived from customer segment mapping</td>
+								</tr>
+								<tr>
+										<td>source_system</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system</td>
+										<td>From source event</td>
+								</tr>
+								<tr>
+										<td>source_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Unified source event ID</td>
+										<td>PAS: <code>transaction_id</code> / Claims: <code>claim_event_id</code> / Comm: <code>commission_event_id</code></td>
+								</tr>
+								<tr>
+										<td>source_batch_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source batch ID</td>
+										<td>From staging / validated <code>batch_id</code></td>
+								</tr>
+								<tr>
+										<td>policy_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Policy ID (for traceability)</td>
+										<td>From source event</td>
+								</tr>
+								<tr>
+										<td>claim_id</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Claim ID (if applicable)</td>
+										<td>From Claims source event</td>
+								</tr>
+								<tr>
+										<td>payment_id</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Payment ID (if applicable)</td>
+										<td>From source event (claim / commission)</td>
+								</tr>
+								<tr>
+										<td>reference_no</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Bank reference or external reference</td>
+										<td>From <code>bank_reference</code> or other external reference</td>
+								</tr>
+								<tr>
+										<td>posting_rule_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Applied posting rule ID</td>
+										<td>Output from rules matrix (e.g. <code>R-001</code>)</td>
+								</tr>
+								<tr>
+										<td>created_ts</td>
+										<td>DATETIME</td>
+										<td class="required-y">Y</td>
+										<td>Record creation timestamp</td>
+										<td>Generated by ETL</td>
+								</tr>
+						</tbody>
+				</table>
+
+        <div class="spacer"></div>
+
+
+        <h3>Reconciliation Dataset</h3>
+        <div class="spacer"></div>
+        <p>Supports daily control and close activities by comparing source system totals with GL results to quickly identify and explain differences.</p>
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Reconciliation Logic Schema Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：1rem 且带下划线 */
+						h2 { font-size: 1.2rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.85rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #444; font-weight: normal; }
+						td { padding: 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 字段名加粗 */
+						td:first-child { font-weight: 500; color: #fff; font-family: Consolas, monospace; }
+
+						/* 必填项 Y 的红色标注 */
+						.required-y { color: #ff4d4f; font-weight: bold; }
+
+						/* 示例/代码块样式 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; }
+						
+						/* 公式标注样式 */
+						.formula { color: #4fc3f7; font-family: Consolas, monospace; font-size: 0.85rem; }
+				</style>
+
+				<h2>Table: daily_recon_summary</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 15%">Field</th>
+										<th style="width: 10%">Type</th>
+										<th style="width: 5%">Req</th>
+										<th style="width: 30%">Description</th>
+										<th style="width: 40%">Derivation</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td>recon_date</td>
+										<td>DATE</td>
+										<td class="required-y">Y</td>
+										<td>Reconciliation date</td>
+										<td>Input from reconciliation job (usually equals GL posting date)</td>
+								</tr>
+								<tr>
+										<td>source_system</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system (PAS / CLAIMS / COMM)</td>
+										<td>Grouping dimension</td>
+								</tr>
+								<tr>
+										<td>metric</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Reconciliation metric</td>
+										<td>Mapped based on <code>event_types</code> (e.g. <code>CASH_IN</code>, <code>ACCRUAL</code>)</td>
+								</tr>
+								<tr>
+										<td>source_system_total</td>
+										<td>DECIMAL(18,2)</td>
+										<td class="required-y">Y</td>
+										<td>Aggregated amount from source</td>
+										<td>Sum from <code>validated_events</code></td>
+								</tr>
+								<tr>
+										<td>gl_total</td>
+										<td>DECIMAL(18,2)</td>
+										<td class="required-y">Y</td>
+										<td>Aggregated amount from GL</td>
+										<td>Sum from <code>posting-ready dataset</code> or GL</td>
+								</tr>
+								<tr>
+										<td>difference_amount</td>
+										<td>DECIMAL(18,2)</td>
+										<td class="required-y">Y</td>
+										<td>Difference</td>
+										<td class="formula">source_system_total − gl_total</td>
+								</tr>
+								<tr>
+										<td>difference_reason</td>
+										<td>STRING</td>
+										<td>N</td>
+										<td>Explained reason for the difference</td>
+										<td>Derived from exception data (e.g. timing / mapping / duplicate)</td>
+								</tr>
+								<tr>
+										<td>exception_count</td>
+										<td>INT</td>
+										<td class="required-y">Y</td>
+										<td>Number of related exceptions</td>
+										<td>Count from <code>exception dataset</code> for the day</td>
+								</tr>
+								<tr>
+										<td>last_updated_ts</td>
+										<td>DATETIME</td>
+										<td class="required-y">Y</td>
+										<td>Last update timestamp</td>
+										<td>Generated by ETL</td>
+								</tr>
+						</tbody>
+				</table>
+
+        <div class="spacer"></div>
+
+
+        <h3>Exception Dataset</h3>
+        <div class="spacer"></div>
+        <p>Supports daily operations by tracking data issues, assigning ownership, monitoring SLA, and enabling timely resolution and reprocessing.</p>
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Exception Reporting Schema Table</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：1.2rem 且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.85rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #444; font-weight: normal; }
+						td { padding: 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 字段名加粗 */
+						td:first-child { font-weight: 500; color: #fff; font-family: Consolas, monospace; }
+
+						/* 必填项 Y 的红色标注 */
+						.required-y { color: #ff4d4f; font-weight: bold; }
+
+						/* 状态与严重程度标签 */
+						code { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.85rem; }
+						
+						/* 备注文字样式 */
+						.notes-text { color: #aaa; font-size: 0.8rem; }
+				</style>
+
+				<h2>Table: exception_cases</h2>
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 15%">Field</th>
+										<th style="width: 10%">Type</th>
+										<th style="width: 5%">Req</th>
+										<th style="width: 30%">Description</th>
+										<th style="width: 40%">Notes</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td>exception_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Exception ID</td>
+										<td class="notes-text">UUID or sequence-generated</td>
+								</tr>
+								<tr>
+										<td>exception_type</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>missing / duplicate / mapping / timing</td>
+										<td class="notes-text">Business-friendly classification</td>
+								</tr>
+								<tr>
+										<td>severity</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td><code>REJECT</code> / <code>QUARANTINE</code> / <code>WARN</code></td>
+										<td class="notes-text">Indicates processing priority</td>
+								</tr>
+								<tr>
+										<td>source_system</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source system (PAS / CLAIMS / COMM)</td>
+										<td>Grouping dimension</td>
+								</tr>
+								<tr>
+										<td>source_event_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Source event ID</td>
+										<td>For drill-down to source data</td>
+								</tr>
+								<tr>
+										<td>batch_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Processing batch ID</td>
+										<td>Traceability per run</td>
+								</tr>
+								<tr>
+										<td>rule_id</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Triggered rule ID</td>
+										<td class="notes-text">e.g. <code>C-002</code> / <code>V-004</code> / <code>R-001</code></td>
+								</tr>
+								<tr>
+										<td>owner</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Owning team (IT / Finance / Ops)</td>
+										<td class="notes-text">Responsibility assignment</td>
+								</tr>
+								<tr>
+										<td>status</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Exception status</td>
+										<td class="notes-text"><code>OPEN</code> / <code>IN_PROGRESS</code> / <code>RESOLVED</code> / <code>WAIVED</code></td>
+								</tr>
+								<tr>
+										<td>sla_due_ts</td>
+										<td>DATETIME</td>
+										<td>N</td>
+										<td>SLA due timestamp</td>
+										<td>Target resolution time</td>
+								</tr>
+								<tr>
+										<td>short_message</td>
+										<td>STRING</td>
+										<td class="required-y">Y</td>
+										<td>Short description of the issue</td>
+										<td class="notes-text">For operations users (summary)</td>
+								</tr>
+								<tr>
+										<td>created_ts</td>
+										<td>DATETIME</td>
+										<td class="required-y">Y</td>
+										<td>Creation timestamp</td>
+										<td>Auto-generated</td>
+								</tr>
+								<tr>
+										<td>resolved_ts</td>
+										<td>DATETIME</td>
+										<td>N</td>
+										<td>Resolution timestamp</td>
+										<td>Populated when status becomes RESOLVED</td>
+								</tr>
+						</tbody>
+				</table>
+
+     
+        <div class="spacer"></div>
+
+      </section>
+
+      <section id="recon">
+        <h2>🔁 6. Daily Reconciliation Design</h2>
+        <h3>Discrepancy Category</h3>
+        <div class="spacer"></div>
+
+				<meta charset="UTF-8">
+				<title>Reconciliation Break Classification</title>
+				<style>
+						/* 全局背景：纯黑 */
+						body { background-color: #000; color: #fff; font-family: "Segoe UI", Arial, sans-serif; padding: 40px; }
+						
+						/* 标题样式：1.2rem 且带下划线 */
+						h2 { font-size: 1rem; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+
+						/* 表格核心样式 */
+						table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 0.9rem; }
+						th { background-color: #000; color: #888; text-align: left; padding: 12px; border-bottom: 1px solid #444; font-weight: normal; }
+						td { padding: 15px 12px; border-bottom: 1px solid #222; vertical-align: middle; }
+
+						/* 斑马纹：一行黑，一行深灰 */
+						tbody tr:nth-child(odd) { background-color: #000; }
+						tbody tr:nth-child(even) { background-color: #111; }
+
+						/* 差异类型加粗 */
+						.break-type { font-weight: bold; color: #fff; }
+
+						/* 是否必须修复列：居中显示 */
+						.must-fix { text-align: center; font-size: 1.1rem; }
+
+						/* 责任部门：使用圆角灰色框风格 */
+						.owner-tag { background-color: #e0e0e0; color: #333; padding: 3px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 500; }
+				</style>
+
+				<table>
+						<thead>
+								<tr>
+										<th style="width: 25%">Break Type</th>
+										<th style="width: 40%">Definition</th>
+										<th style="width: 15%; text-align: center;">Must Be Fixed</th>
+										<th style="width: 20%">Typical Owner</th>
+								</tr>
+						</thead>
+						<tbody>
+								<tr>
+										<td class="break-type">Timing difference</td>
+										<td>Difference between posting date and business date</td>
+										<td class="must-fix">❌ <span style="font-size: 0.8rem; color: #888;">(monitor only)</span></td>
+										<td><span class="owner-tag">Finance</span></td>
+								</tr>
+								<tr>
+										<td class="break-type">Missing / Duplicate</td>
+										<td>Missing or duplicated data</td>
+										<td class="must-fix">✅</td>
+										<td><span class="owner-tag">IT / Data</span></td>
+								</tr>
+								<tr>
+										<td class="break-type">Mapping / Master data</td>
+										<td>Account or dimension not mapped or mapped incorrectly</td>
+										<td class="must-fix">✅</td>
+										<td><span class="owner-tag">Finance Systems</span></td>
+								</tr>
+								<tr>
+										<td class="break-type">Logic issue</td>
+										<td>Errors in posting or ETL logic</td>
+										<td class="must-fix">✅</td>
+										<td><span class="owner-tag">Finance Systems / IT</span></td>
+								</tr>
+						</tbody>
+				</table>
+
+        <div class="spacer"></div>
+
+        <h3>Reconciliation SOP</h3>
+        <div class="spacer"></div>
+        <p>Each reconciliation difference is investigated using a fixed sequence of checks, starting with simple and common causes such as timing, missing, or duplicate issues, and then progressively drilling down into ETL logic and mapping rules. The root cause, owner, and corrective action are recorded to ensure the process is traceable and reviewable.</p>
+        <div class="spacer"></div>
+
+
+
+        <pre class="mermaid">
+        flowchart TD
+            A([Daily recon start]) --> B[Load inputs]
+            B --> C[Aggregate by date system metric]
+            C --> D{Diff is zero and counts match?}
+
+            D -- Yes --> Z([Close balanced])
+            D -- No --> E[Step 1 Timing check]
+
+            E --> F{Explained by timing?}
+            F -- Yes --> F1[Classify TIMING]
+            F1 --> Y([Log and close])
+
+            F -- No --> G[Step 2 Completeness check]
+            G --> H{Missing or duplicate?}
+
+            H -- Yes --> H1[Classify MISSING or DUPLICATE]
+            H1 --> H2[Fix interface or rerun batch]
+            H2 --> Y
+
+            H -- No --> I[Step 3 ETL transform check]
+            I --> J{Transform issue found?}
+
+            J -- Yes --> J1[Classify ETL LOGIC]
+            J1 --> J2[Fix transform and rerun]
+            J2 --> Y
+
+            J -- No --> K[Step 4 Mapping and rules check]
+            K --> L{Mapping or rule issue?}
+
+            L -- Yes --> L1[Classify MAPPING or RULE]
+            L1 --> L2[Update mapping rules and reprocess]
+            L2 --> Y
+
+            L -- No --> M[Step 5 Deep dive and escalate]
+            M --> N([Assign owner SLA next action])
+            N --> Y
+        </pre>
+
+
+        <div class="spacer"></div>
+        <h3>Discrepancy Case</h3>
+        <div class="spacer"></div>
+        <h4>Case 1: Premium Timing Difference</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Source system (PAS) shows premium received on 1/31</li>
+            <li>GL posts the entry on 2/1</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 1</li>
+        </ul>
+        <ul>
+          <li>Root Cause: Cut-off difference between payment_date and gl_posting_date</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Mark as a timing difference</li>
+            <li>Difference clears naturally during month-end reconciliation</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 2: Claim Payment Timing Issue</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Claim payment approved in the Claims system</li>
+            <li>Bank payment failed</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 1 → Step 2</li>
+        </ul>
+        <ul>
+          <li>Root Cause: payment_status = FAIL</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Do not post to GL</li>
+            <li>Operations team follows up on re-payment</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 3: Missing PAS Events</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Premium recorded in PAS</li>
+            <li>No corresponding journal entry in GL</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 2 (count mismatch)</li>
+        </ul>
+        <ul>
+          <li>Root Cause: ETL extraction job failure</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>IT re-runs the extract job</li>
+            <li>Backfills the missing batch</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 4: Duplicate Commission Events</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Commission expense double-counted in GL</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 2</li>
+        </ul>
+        <ul>
+          <li>Root Cause: source_event_id not properly de-duplicated across batches</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Fix de-duplication logic in validated_events</li>
+            <li>Reverse duplicated postings</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 5: Missing Mapping – New Product</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Premiums for a new product are not posted</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 4</li>
+        </ul>
+        <ul>
+          <li>Root Cause: - product_code not found in product mapping table</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Finance updates master data</li>
+            <li>Reprocess quarantined events</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 6: Incorrect Account for Commission</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Commission posted to expense instead of acquisition cost</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 4</li>
+        </ul>
+        <ul>
+          <li>Root Cause: Posting rule does not differentiate by channel or product type</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Update the posting rules matrix</li>
+            <li>Adjust historical entries if required</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 7: Sign Issue in ETL</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Source refund amount = -200</li>
+            <li>GL posts as DR 200</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 3</li>
+        </ul>
+        <ul>
+          <li>Root Cause: Incorrect amount sign normalization logic</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Fix transformation logic</li>
+            <li>Re-run the daily batch</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 8: Reserve Double Counted</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Liability for Incurred Claims (LIC) exceeds source reserve</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 3 → Step 4</li>
+        </ul>
+        <ul>
+          <li>Root Cause: reserve_update and reserve_setup both posted</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Refine event classification logic</li>
+            <li>Correct posting rules</li>
+          </ul>
+        </ul>
+
+        <div class="spacer"></div>
+        <h4>Case 9: Rule Version Mismatch</h4>
+        <div class="spacer"></div>
+        <ul>
+          <li>Observation:</li>
+          <ul>
+            <li>Similar transactions posted to different accounts on different dates</li>
+          </ul>
+        </ul>
+        <ul>
+          <li>Investigation Step: Step 4</li>
+        </ul>
+        <ul>
+          <li>Root Cause: Older batch processed using an outdated rule version</li>
+        </ul>
+        <ul>
+          <li>Resolution:</li>
+          <ul>
+            <li>Lock rule_version per batch</li>
+            <li>Define clear rule effective dates</li>
+          </ul>
+        </ul>
+
+
+
+        <div class="spacer"></div>
+
+
+
+
+
+        <div class="spacer"></div>
+
+
+
+
+
+        <div class="spacer"></div>
+        <p>
+          Defines a standard daily reconciliation playbook to identify timing differences, missing or duplicate data, mapping issues, and logic errors in a structured and traceable manner.
+        </p>
+      </section>
+
+    </main>
+  </div>
 </div>
+
+<a href="../projects/" class="btn">Back to Project List</a>
+
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "default" });
+</script>
+
+
+<script>
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]'));
+  const sections = tocLinks
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+  const setActive = (id) => {
+    tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  };
+
+  const io = new IntersectionObserver((entries) => {
+    // 找到当前最“可见”的section
+    const visible = entries
+      .filter(e => e.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible) setActive(visible.target.id);
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: [0.1, 0.2, 0.3, 0.4, 0.5] });
+
+  sections.forEach(sec => io.observe(sec));
+
+  // 点击时也立刻高亮
+  tocLinks.forEach(a => a.addEventListener('click', () => {
+    const id = a.getAttribute('href').slice(1);
+    setActive(id);
+  }));
+</script>
+
+
+
 
 </body>
 </html>

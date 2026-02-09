@@ -476,3 +476,52 @@ nav .fa-solid{
     margin-top: -40px;
     display: block;
 }
+
+.toc-sub {
+  margin-left: 16px;   /* 向右缩进 */
+}
+
+.toc-section {
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.content ul ul {
+  margin-left: 24px;
+}
+
+.spacer {
+  height: 24px;
+}
+
+#landscape ul {
+  margin-left: 24px;   /* 控制整体向右缩 */
+  padding-left: 16px;  /* 控制 bullet 和文字的距离 */
+}
+
+/* 1) 目录整体往左移一点 + 目录更宽 */
+.toc{
+  width: 320px;            /* 原来 260px -> 更长一点 */
+  padding-left: 8px;       /* 原来 16px -> 目录内容更靠左 */
+  margin-left: -12px;      /* 往左“挪”一点（可调：-8 ~ -24） */
+  border-left: 4px solid #eee;
+}
+
+/* 2) 选中目录项：字体变绿色（支持两种：JS加active类 / 点击锚点 :target） */
+.toc a.active{
+  color: #16a34a;          /* 绿色 */
+  font-weight: 600;
+}
+.toc a:hover{
+  color: #16a34a;          /* hover 也可以顺便变绿 */
+}
+
+/* 3) h2 字体更大 + padding 更大 */
+section h2{
+  font-size: 26px;         /* 你可以 24~30 自己微调 */
+  padding: 12px 0 10px;    /* 上下更“厚” */
+  margin-bottom: 18px;
+  border-bottom: 1px solid #eee;
+}
